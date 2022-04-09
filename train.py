@@ -59,15 +59,15 @@ SAVE_PATH = "resnet50v2"
 BATCH_SIZE = 64
 IMG_SIZE = (224,224) #(512,632)
 
-initial_epochs = 15
-fine_tune_epochs = 15
+initial_epochs = 10
+fine_tune_epochs = 10
 layers_to_fine_tune = 3
 
 #network, preprocess_input = Classifiers.get('resnet18') #For "Keras Zoo" models
 preprocess_input = tf.keras.applications.resnet_v2.preprocess_input
 network = tf.keras.applications.ResNet50V2
 
-base_learning_rate = 0.0001
+base_learning_rate = 0.01
 
 metrics = [
       #tf.keras.metrics.TruePositives(name='tp'),
@@ -288,7 +288,13 @@ fine_tune_at = len(base_model.layers) - layers_to_fine_tune
 
 # Freeze all the layers before the `fine_tune_at` layer
 for layer in base_model.layers[:fine_tune_at]:
-  layer.trainable = False
+    layer.trainable = False
+
+model.compile(
+    loss=tf.keras.losses.BinaryCrossentropy(from_logits=True),
+    optimizer=tf.keras.optimizers.RMSprop(learning_rate=base_learning_rate/10),
+    metrics=metrics,
+)
 
 model.summary()
 
@@ -310,11 +316,11 @@ val_acc += history_fine.history['val_accuracy']
 loss += history_fine.history['loss']
 val_loss += history_fine.history['val_loss']
 
-auc = history.history['auc']
-val_auc = history.history['val_auc']
+auc = history_fine.history['auc']
+val_auc = history_fine.history['val_auc']
 
-f1 = history.history['f1_metric']
-val_f1 = history.history['val_f1_metric']
+f1 = history_fine.history['f1_metric']
+val_f1 = history_fine.history['val_f1_metric']
 
 # fig 1
 plt.figure(figsize=(8, 8))
