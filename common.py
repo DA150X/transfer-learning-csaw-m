@@ -305,11 +305,11 @@ def train(preprocess_input, network, PATH, SAVE_PATH, BATCH_SIZE=64, IMG_SIZE=(5
 	loss += history_fine.history['loss']
 	val_loss += history_fine.history['val_loss']
 
-	auc = history_fine.history['auc']
-	val_auc = history_fine.history['val_auc']
+	auc += history_fine.history['auc']
+	val_auc += history_fine.history['val_auc']
 
-	f1 = history_fine.history['f1_metric']
-	val_f1 = history_fine.history['val_f1_metric']
+	f1 += history_fine.history['f1_metric']
+	val_f1 += history_fine.history['val_f1_metric']
 
 	# fig 1
 	plt.figure(figsize=(8, 8))
