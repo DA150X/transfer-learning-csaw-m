@@ -141,7 +141,7 @@ def generate_samples(dataset, size, scale_factor, output):
     augment_dataset(train_subset, scale_factor, output, f'{size}x{scale_factor}/train')
     augment_dataset(validation_subset, scale_factor, output, f'{size}x{scale_factor}/validation')
     for image in test_subset:
-        image.write_to_dir(f'{size}x{scale_factor}/test')
+        image.write_to_dir(f'{output}/{size}x{scale_factor}/test')
 
 
 def augment_dataset(dataset, scale_factor, output_dir, output_name):
