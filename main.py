@@ -10,7 +10,7 @@ def get_network(name):
     if name == "ResNet50":
         return tf.keras.applications.ResNet50V2, tf.keras.applications.resnet_v2.preprocess_input
     elif name == "ResNet18":
-        return Classifiers.get('resnet18') # "Keras Zoo" models requires a ImageNet weight file on the device
+        return Classifiers.get('resnet18') # "Keras Zoo" models requires a ImageNet weight file located at /weights
     elif name == "InceptionV3":
         return tf.keras.applications.InceptionV3 , tf.keras.applications.inception_v3.preprocess_input
     else:
@@ -32,7 +32,7 @@ networks_to_train = ["ResNet50", "InceptionV3"]
 
 for network_name in networks_to_train:
     SAVE_PATH = network_name
-    network, preprocess_input = get_network(network_name)
+    network, preprocess_input, layers_to_fine_tune = get_network(network_name)
 
     create_path(SAVE_PATH
 
@@ -48,7 +48,7 @@ for network_name in networks_to_train:
                 preprocess_input = preprocess_input,
                 PATH = PATH + "/{}".format(sample),
                 SAVE_PATH = SAVE_PATH_FOR_SAMPLE,
-                layers_to_fine_tune = 3
+                layers_to_fine_tune = layers_to_fine_tune
             )
 
 
