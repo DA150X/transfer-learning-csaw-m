@@ -14,7 +14,7 @@ def get_network(name):
     elif name == "ResNet101":
         return tf.keras.applications.ResNet101, tf.keras.applications.resnet.preprocess_input, 2
     elif name == "EfficientNetB0":
-        return tf.keras.applications.EfficientNetB0, tf.keras.applications.efficientnet.preprocess_input, 6
+        return tf.keras.applications.EfficientNetB0, tf.keras.applications.efficientnet.preprocess_input, 4
     elif name == "EfficientNetB1":
         return tf.keras.applications.EfficientNetB1, tf.keras.applications.efficientnet.preprocess_input, 4
     elif name == "EfficientNetB2":
