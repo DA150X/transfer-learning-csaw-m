@@ -1,92 +1,46 @@
-import tensorflow as tf
 import os
-from classification_models.keras import Classifiers
-from common2 import train
-import sys
+import tensorflow as tf
+from pathlib import Path
+from common import train
 from contextlib import redirect_stdout
-
-#Returns network, preprocess_input and layers to finetune for the given network
-def get_network(name):
-    if name == "ResNet50V2":
-        return tf.keras.applications.ResNet50V2, tf.keras.applications.resnet_v2.preprocess_input, 3
-    elif name == "ResNet50":
-        return tf.keras.applications.ResNet50, tf.keras.applications.resnet.preprocess_input, 2
-    elif name == "ResNet101":
-        return tf.keras.applications.ResNet101, tf.keras.applications.resnet.preprocess_input, 2
-    elif name == "EfficientNetB0":
-        return tf.keras.applications.EfficientNetB0, tf.keras.applications.efficientnet.preprocess_input, 4
-    elif name == "EfficientNetB1":
-        return tf.keras.applications.EfficientNetB1, tf.keras.applications.efficientnet.preprocess_input, 4
-    elif name == "EfficientNetB2":
-        return tf.keras.applications.EfficientNetB2, tf.keras.applications.efficientnet.preprocess_input, 4
-    elif name == "EfficientNetB3":
-        return tf.keras.applications.EfficientNetB3, tf.keras.applications.efficientnet.preprocess_input, 4
-    elif name == "EfficientNetB4":
-        return tf.keras.applications.EfficientNetB4, tf.keras.applications.efficientnet.preprocess_input, 4
-    elif name == "EfficientNetB5":
-        return tf.keras.applications.EfficientNetB5, tf.keras.applications.efficientnet.preprocess_input, 4
-    elif name == "EfficientNetB6":
-        return tf.keras.applications.EfficientNetB6, tf.keras.applications.efficientnet.preprocess_input, 4
-    elif name == "EfficientNetB7":
-        return tf.keras.applications.EfficientNetB7, tf.keras.applications.efficientnet.preprocess_input, 4
-    elif name == "EfficientNetV2B0":
-        return tf.keras.applications.EfficientNetV2B0, tf.keras.applications.efficientnet_v2.preprocess_input, 4
-    elif name == "EfficientNetV2B1":
-        return tf.keras.applications.EfficientNetV2B1, tf.keras.applications.efficientnet_v2.preprocess_input, 4
-    elif name == "EfficientNetV2B2":
-        return tf.keras.applications.EfficientNetV2B2, tf.keras.applications.efficientnet_v2.preprocess_input, 4
-    elif name == "EfficientNetV2B3":
-        return tf.keras.applications.EfficientNetV2B3, tf.keras.applications.efficientnet_v2.preprocess_input, 4
-    elif name == "VGG16":
-        return tf.keras.applications.VGG16, tf.keras.applications.vgg16.preprocess_input, 1
-    elif name == "DenseNet169":
-        return tf.keras.applications.DenseNet169, tf.keras.applications.densenet.preprocess_input, 3
-    elif name == "ResNet34":
-        return Classifiers.get('resnet34'), 3 # "Keras Zoo" models requires a ImageNet weight file located at /weights
-    elif name == "InceptionV3":
-        return tf.keras.applications.InceptionV3 , tf.keras.applications.inception_v3.preprocess_input, 3
-    else:
-        print("Network not found")
-
-def create_path(path):
-    if not os.path.exists(path):
-        os.mkdir(path)
-        print("Directory " , path ,  " Created")
-    else:
-        print("Directory " , path ,  " already exists")
-
-
+from helpers import get_network, create_path_if_not_exists
 
 
 tf.keras.backend.set_image_data_format('channels_last')
-PATH = "samples" #Head path to dataset samples
-SAVE_PATH = "res/"
-samples = [512]
 
-networks_to_train = ["VGG16", "ResNet50V2"]
-
-for network_name in networks_to_train:
-    SAVE_PATH = SAVE_PATH + network_name
-    network, preprocess_input, layers_to_fine_tune = get_network(network_name)
-
-    create_path(SAVE_PATH)
-
-    for sample in samples:
-        SAVE_PATH_FOR_SAMPLE = SAVE_PATH + "/{}".format(sample)
-
-        create_path(SAVE_PATH_FOR_SAMPLE)
-
-        #Redirect stdout to file to save training data
-        with open(SAVE_PATH_FOR_SAMPLE + "/log.log", 'w') as f, redirect_stdout(f):
-            train(
-                network = network,
-                preprocess_input = preprocess_input,
-                PATH = PATH + "/{}".format(sample),
-                SAVE_PATH = SAVE_PATH_FOR_SAMPLE,
-                layers_to_fine_tune = layers_to_fine_tune
-            )
+HOME = str(Path.home())
+SAMPLE_PATH = f'{HOME}/da150x/samples/'
+SAVE_PATH = f'{HOME}/da150x/results/'
+# samples = ['3000x10', '6000x10', '9000x10', '3000x100', '6000x100', '9000x100']
+samples = ['1000x10', '5000x10']
+batch_sizes = [16, 64, 128, 256]
+learning_rates = [0.1, 0.01, 0.001]
+initial_epochs = 7
+fine_tune_epochs = 7
+networks_to_train = ['ResNet50V2', 'EfficientNetV2B0']
 
 
-        print("Finished " + SAVE_PATH_FOR_SAMPLE)
+for sample in samples:
+    for network_name in networks_to_train:
+        network, preprocess_input, layers_to_fine_tune = get_network(network_name)
+        for batch_size in batch_sizes:
+            for learning_rate in learning_rates:
+                output_path = f'{SAVE_PATH}/#N-{network_name}#S-{sample}-#B-{batch_size}-#LR{learning_rate}/'
 
+                create_path_if_not_exists(output_path)
 
+                with open(output_path + '/output.log', 'w') as f, redirect_stdout(f):
+                    print(f'running {sample}')
+                    train(
+                        network=network,
+                        preprocess_input=preprocess_input,
+                        src_path=f'{SAMPLE_PATH}/{sample}',
+                        save_path=output_path,
+                        layers_to_fine_tune=layers_to_fine_tune,
+                        base_learning_rate=learning_rate,
+                        BATCH_SIZE=batch_size,
+                        initial_epochs=initial_epochs,
+                        fine_tune_epochs=fine_tune_epochs,
+                    )
+
+                print('Finished ' + output_path)

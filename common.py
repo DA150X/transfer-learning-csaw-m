@@ -15,7 +15,7 @@ def f1_metric(y_true, y_pred):
     return f1_val
 
 
-def print_confusion_matrix(y_true, y_pred, SAVE_PATH):
+def print_confusion_matrix(y_true, y_pred, save_path):
     conf_matrix = confusion_matrix(y_true=y_true, y_pred=y_pred)
 
     fig, ax = plt.subplots(figsize=(5, 5))
@@ -34,15 +34,15 @@ def print_confusion_matrix(y_true, y_pred, SAVE_PATH):
     plt.xlabel('Predictions', fontsize=18)
     plt.ylabel('Actuals', fontsize=18)
     plt.title('Confusion Matrix', fontsize=18)
-    plt.savefig(SAVE_PATH + '/confusion_matrix.png')
+    plt.savefig(save_path + '/confusion_matrix.png')
     plt.close()
 
 
 def train(
     preprocess_input,
     network,
-    PATH,
-    SAVE_PATH,
+    src_path,
+    save_path,
     BATCH_SIZE=64,
     IMG_SIZE=(512, 632),
     initial_epochs=10,
@@ -74,14 +74,15 @@ def train(
     print('Weight for class 1: {:.2f}'.format(weight_for_1))
 
     # Make a directory to store plots and prints
-    if not os.path.exists(SAVE_PATH):
-        os.mkdir(SAVE_PATH)
-        print('Directory ', SAVE_PATH,  ' Created')
+    if not os.path.exists(save_path):
+        os.mkdir(save_path)
+        print('Directory ', save_path,  ' Created')
     else:
-        print('Directory ', SAVE_PATH,  ' already exists')
+        print('Directory ', save_path,  ' already exists')
 
-    train_dir = os.path.join(PATH, 'train')
-    validation_dir = os.path.join(PATH, 'validation')
+    train_dir = os.path.join(src_path, 'train')
+    validation_dir = os.path.join(src_path, 'validation')
+    test_dir = os.path.join(src_path, 'test')
 
     IMG_SHAPE = IMG_SIZE + (3,)
 
@@ -102,7 +103,7 @@ def train(
     )
 
     test_dataset = tf.keras.utils.image_dataset_from_directory(
-        validation_dir,
+        test_dir,
         shuffle=True,
         batch_size=BATCH_SIZE,
         image_size=IMG_SIZE
@@ -201,7 +202,7 @@ def train(
     plt.ylabel('Accuracy')
     plt.ylim([min(plt.ylim()) - 0.1 * max(plt.ylim()), max(plt.ylim()) + 0.1 * max(plt.ylim())])
     plt.title('Training and Validation Accuracy')
-    plt.savefig(SAVE_PATH + '/accuracy_naive_model.png')
+    plt.savefig(save_path + '/pass1_accuracy.png')
     plt.close()
 
     plt.subplot(2, 1, 2)
@@ -212,7 +213,7 @@ def train(
     plt.ylim([min(plt.ylim()) - 0.1 * max(plt.ylim()), max(plt.ylim()) + 0.1 * max(plt.ylim())])
     plt.title('Training and Validation Loss')
     plt.xlabel('epoch')
-    plt.savefig(SAVE_PATH + '/loss_naive_model.png')
+    plt.savefig(save_path + '/pass1_loss.png')
     plt.close()
 
     # fig 2
@@ -224,7 +225,7 @@ def train(
     plt.ylabel('Accuracy')
     plt.ylim([min(plt.ylim()) - 0.1 * max(plt.ylim()), max(plt.ylim()) + 0.1 * max(plt.ylim())])
     plt.title('Training and Validation AUC')
-    plt.savefig(SAVE_PATH + '/auc_naive_model.png')
+    plt.savefig(save_path + '/pass1_auc.png')
     plt.close()
 
     plt.subplot(2, 1, 2)
@@ -235,7 +236,7 @@ def train(
     plt.ylim([min(plt.ylim()) - 0.1 * max(plt.ylim()), max(plt.ylim()) + 0.1 * max(plt.ylim())])
     plt.title('Training and Validation F1')
     plt.xlabel('epoch')
-    plt.savefig(SAVE_PATH + '/f1_naive_model.png')
+    plt.savefig(save_path + '/pass1_f1.png')
     plt.close()
 
     base_model.trainable = True
@@ -292,7 +293,7 @@ def train(
     )
     plt.legend(loc='upper left')
     plt.title('Training and Validation Accuracy')
-    plt.savefig(SAVE_PATH + '/accuracy_feature_extraction.png')
+    plt.savefig(save_path + '/pass2_accuracy.png')
     plt.close()
 
     plt.subplot(2, 1, 2)
@@ -312,7 +313,7 @@ def train(
     plt.legend(loc='lower left')
     plt.title('Training and Validation Loss')
     plt.xlabel('epoch')
-    plt.savefig(SAVE_PATH + '/loss_feature_extraction.png')
+    plt.savefig(save_path + '/pass2_loss.png')
     plt.close()
 
     # fig 2
@@ -333,7 +334,7 @@ def train(
     )
     plt.legend(loc='upper left')
     plt.title('Training and Validation AUC')
-    plt.savefig(SAVE_PATH + '/auc_feature_extraction.png')
+    plt.savefig(save_path + '/pass2_auc.png')
     plt.close()
 
     plt.subplot(2, 1, 2)
@@ -353,7 +354,7 @@ def train(
     plt.legend(loc='lower left')
     plt.title('Training and Validation F1')
     plt.xlabel('epoch')
-    plt.savefig(SAVE_PATH + '/f1_feature_extraction.png')
+    plt.savefig(save_path + '/pass2_f1.png')
     plt.close()
 
     loss, accuracy, uac, f1 = model.evaluate(test_dataset)
@@ -382,11 +383,11 @@ def train(
             plt.title(class_names[predictions[i]])
             plt.axis('off')
 
-        print_confusion_matrix(y_true=label_batch, y_pred=predictions.numpy(), SAVE_PATH)
+        print_confusion_matrix(y_true=label_batch, y_pred=predictions.numpy(), save_path=save_path)
         print(f1_metric(
             y_true=label_batch.astype('float32', casting='same_kind'),
             y_pred=predictions.numpy().astype('float32', casting='same_kind')
         ))
 
-    plt.savefig(SAVE_PATH + '/pictures.png')
+    plt.savefig(save_path + '/pictures.png')
     plt.close()
