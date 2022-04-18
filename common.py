@@ -1,4 +1,5 @@
 import os
+import csv
 import tensorflow as tf
 from keras import backend as K
 import matplotlib.pyplot as plt
@@ -48,7 +49,9 @@ def train(
     initial_epochs=10,
     fine_tune_epochs=10,
     layers_to_fine_tune=3,
-    base_learning_rate=0.01
+    base_learning_rate=0.01,
+    save_root=None,
+    config_params=None,
 ):
     tf.keras.backend.set_image_data_format('channels_last')
 
@@ -276,6 +279,46 @@ def train(
 
     f1 += history_fine.history['f1_metric']
     val_f1 += history_fine.history['val_f1_metric']
+
+    recorded_values = {
+        'acc': acc,
+        'acc_val': val_acc,
+        'loss': loss,
+        'loss_val': val_loss,
+        'auc': auc,
+        'auc_val': val_auc,
+        'f1': f1,
+        'f1_val': val_f1,
+    }
+    if save_root is not None:
+        for recorded_value in recorded_values:
+            fields = [
+                'network_name',
+                'sample',
+                'batch_size',
+                'learning_rate',
+                'epoch',
+                'val',
+            ]
+            filename_csv = f'{save_root}/{recorded_value}.csv'
+            if not os.path.exists(filename_csv):
+                with open(filename_csv, 'w') as csv_file:
+                    writer = csv.DictWriter(csv_file, fieldnames=fields)
+                    writer.writeheader()
+
+            i = 0
+            for val in recorded_values[recorded_value]:
+                i += 1
+                with open(filename_csv, 'a') as csv_file:
+                    writer = csv.DictWriter(csv_file, fieldnames=fields)
+                    writer.writerow({
+                        'network_name': config_params['network_name'],
+                        'sample': config_params['sample'],
+                        'batch_size': config_params['batch_size'],
+                        'learning_rate': config_params['learning_rate'],
+                        'epoch': i,
+                        'val': val,
+                    })
 
     # fig 1
     plt.figure(figsize=(8, 8))
