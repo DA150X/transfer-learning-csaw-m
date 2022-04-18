@@ -174,6 +174,7 @@ def augment_dataset(dataset, scale_factor, output_dir, output_name):
 
     shutil.move(output_dir + '/tmp/1_cancer/output', f'{output_dir}/{output_name}/1_cancer')
     shutil.move(output_dir + '/tmp/0_not_cancer/output', f'{output_dir}/{output_name}/0_not_cancer')
+    shutil.rmtree(output_dir + '/tmp')
 
 
 def main():
