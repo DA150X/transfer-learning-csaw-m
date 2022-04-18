@@ -60,13 +60,13 @@ def create_path(path):
 
 tf.keras.backend.set_image_data_format('channels_last')
 PATH = "samples" #Head path to dataset samples
-EEEEE = "res/"
+SAVE_PATH = "res/"
 samples = [512]
 
 networks_to_train = ["VGG16", "ResNet50V2"]
 
 for network_name in networks_to_train:
-    SAVE_PATH = EEEEE + network_name
+    SAVE_PATH = SAVE_PATH + network_name
     network, preprocess_input, layers_to_fine_tune = get_network(network_name)
 
     create_path(SAVE_PATH)
