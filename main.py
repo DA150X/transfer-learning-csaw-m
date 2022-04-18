@@ -15,7 +15,7 @@ SAVE_PATH = f'{HOME}/da150x/results/'
 samples = ['1000x10', '5000x10']
 batch_sizes = [16, 64, 128, 256]
 learning_rates = [0.1, 0.01, 0.001]
-initial_epochs = 7
+initial_epochs = 2
 fine_tune_epochs = 7
 networks_to_train = ['ResNet50V2', 'EfficientNetV2B0']
 

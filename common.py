@@ -110,9 +110,10 @@ def train(
     )
 
     val_batches = tf.data.experimental.cardinality(validation_dataset)
+    test_batches = tf.data.experimental.cardinality(test_dataset)
 
-    print('Number of validation batches: %d' % tf.data.experimental.cardinality(validation_dataset))
-    print('Number of test batches: %d' % tf.data.experimental.cardinality(test_dataset))
+    print('Number of validation batches: %d' % val_batches)
+    print('Number of test batches: %d' % test_batches)
 
     class_names = train_dataset.class_names
 
@@ -166,11 +167,11 @@ def train(
 
     print('Trainable layers: ', len(model.trainable_variables))
 
-    loss0, accuracy0, uac0, f10 = model.evaluate(validation_dataset)
+    loss0, accuracy0, auc0, f10 = model.evaluate(validation_dataset)
 
     print('initial loss    : {:.2f}'.format(loss0))
     print('initial accuracy: {:.2f}'.format(accuracy0))
-    print('initial uac     : {:.2f}'.format(uac0))
+    print('initial auc     : {:.2f}'.format(auc0))
     print('initial f1      : {:.2f}'.format(f10))
 
     history = model.fit(
@@ -195,7 +196,6 @@ def train(
 
     # fig 1
     plt.figure(figsize=(8, 8))
-    plt.subplot(2, 1, 1)
     plt.plot(acc, label='Training Accuracy')
     plt.plot(val_acc, label='Validation Accuracy')
     plt.legend(loc='lower left')
@@ -205,7 +205,7 @@ def train(
     plt.savefig(save_path + '/pass1_accuracy.png')
     plt.close()
 
-    plt.subplot(2, 1, 2)
+    plt.figure(figsize=(8, 8))
     plt.plot(loss, label='Training Loss')
     plt.plot(val_loss, label='Validation Loss')
     plt.legend(loc='upper left')
@@ -218,7 +218,6 @@ def train(
 
     # fig 2
     plt.figure(figsize=(8, 8))
-    plt.subplot(2, 1, 1)
     plt.plot(auc, label='Training AUC')
     plt.plot(val_auc, label='Validation AUC')
     plt.legend(loc='upper left')
@@ -228,7 +227,7 @@ def train(
     plt.savefig(save_path + '/pass1_auc.png')
     plt.close()
 
-    plt.subplot(2, 1, 2)
+    plt.figure(figsize=(8, 8))
     plt.plot(f1, label='Training F1')
     plt.plot(val_f1, label='Validation F1')
     plt.legend(loc='upper left')
@@ -280,7 +279,6 @@ def train(
 
     # fig 1
     plt.figure(figsize=(8, 8))
-    plt.subplot(2, 1, 1)
     plt.plot(acc, label='Training Accuracy')
     plt.plot(val_acc, label='Validation Accuracy')
     plt.ylim([min(plt.ylim()) - 0.1 * max(plt.ylim()),max(plt.ylim()) + 0.1 * max(plt.ylim())])
@@ -296,7 +294,7 @@ def train(
     plt.savefig(save_path + '/pass2_accuracy.png')
     plt.close()
 
-    plt.subplot(2, 1, 2)
+    plt.figure(figsize=(8, 8))
     plt.plot(loss, label='Training Loss')
     plt.plot(val_loss, label='Validation Loss')
     plt.ylim([
@@ -318,7 +316,6 @@ def train(
 
     # fig 2
     plt.figure(figsize=(8, 8))
-    plt.subplot(2, 1, 1)
     plt.plot(auc, label='Training AUC')
     plt.plot(val_auc, label='Validation AUC')
     plt.ylim([
@@ -337,7 +334,7 @@ def train(
     plt.savefig(save_path + '/pass2_auc.png')
     plt.close()
 
-    plt.subplot(2, 1, 2)
+    plt.figure(figsize=(8, 8))
     plt.plot(f1, label='Training F1')
     plt.plot(val_f1, label='Validation F1')
     plt.ylim([
@@ -357,10 +354,10 @@ def train(
     plt.savefig(save_path + '/pass2_f1.png')
     plt.close()
 
-    loss, accuracy, uac, f1 = model.evaluate(test_dataset)
+    loss, accuracy, auc, f1 = model.evaluate(test_dataset)
     print('Test loss    : {:.2f}'.format(loss))
     print('Test accuracy: {:.2f}'.format(accuracy))
-    print('Test uac     : {:.2f}'.format(uac))
+    print('Test auc     : {:.2f}'.format(auc))
     print('Test f1      : {:.2f}'.format(f1))
 
     for n in range(5):
