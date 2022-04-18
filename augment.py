@@ -163,6 +163,8 @@ def augment_dataset(dataset, scale_factor, output_dir, output_name):
     p.zoom(probability=0.5, min_factor=1.1, max_factor=1.3)
     p.random_brightness(probability=0.5, min_factor=1.1, max_factor=1.5)
     p.random_contrast(probability=0.5, min_factor=1.1, max_factor=1.5)
+    p.flip_left_right(probability=0.5)
+    p.flip_top_bottom(probability=0.5)
     p.sample(num_cancer_target)
 
     p = Augmentor.Pipeline(output_dir + '/tmp/0_not_cancer')
@@ -170,6 +172,8 @@ def augment_dataset(dataset, scale_factor, output_dir, output_name):
     p.zoom(probability=0.5, min_factor=1.1, max_factor=1.3)
     p.random_brightness(probability=0.5, min_factor=1.1, max_factor=1.5)
     p.random_contrast(probability=0.5, min_factor=1.1, max_factor=1.5)
+    p.flip_left_right(probability=0.5)
+    p.flip_top_bottom(probability=0.5)
     p.sample(num_not_cancer_target)
 
     shutil.move(output_dir + '/tmp/1_cancer/output', f'{output_dir}/{output_name}/1_cancer')
