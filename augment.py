@@ -89,6 +89,13 @@ def get_argument_parser():
         help='factor to scale the samples by',
     )
 
+    parser.add_argument(
+        '--ignore-output-exists',
+        action='store_true',
+        default=False,
+        help='Use this flag to ignore the overwrite/abort prompt if output directory already exists',
+    )
+
     return parser
 
 
@@ -183,7 +190,7 @@ def main():
 
     dataset = Dataset(path_to_csaw_m)
 
-    while pathlib.Path(output).exists():
+    while pathlib.Path(output).exists() and not args.ignore_output_exists:
         print(f'Output dir {output} already exists. Would you like to delete, or abort')
         answer = input('Type one of [O]verwrite, or [A]bort: ')
         if answer.upper() == 'O':
