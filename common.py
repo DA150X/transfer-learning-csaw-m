@@ -52,6 +52,7 @@ def train(
     base_learning_rate=0.01,
     save_root=None,
     config_params=None,
+    loss_function=None,
 ):
     tf.keras.backend.set_image_data_format('channels_last')
 
@@ -162,7 +163,7 @@ def train(
 
     model.compile(
         optimizer=tf.keras.optimizers.Adam(learning_rate=base_learning_rate),
-        loss=tf.keras.losses.BinaryCrossentropy(from_logits=True),
+        loss=loss_function,
         metrics=metrics,
     )
 
@@ -252,7 +253,7 @@ def train(
 
     model.compile(
         optimizer=tf.keras.optimizers.Adam(learning_rate=base_learning_rate / 10),
-        loss=tf.keras.losses.BinaryCrossentropy(from_logits=True),
+        loss=loss_function,
         metrics=metrics,
     )
 
@@ -385,6 +386,7 @@ def train(
                 'sample',
                 'batch_size',
                 'learning_rate',
+                'loss_function',
                 'epoch',
                 'val',
             ]
@@ -404,6 +406,7 @@ def train(
                         'sample': config_params['sample'],
                         'batch_size': config_params['batch_size'],
                         'learning_rate': config_params['learning_rate'],
+                        'loss_function': config_params['loss_function'],
                         'epoch': i,
                         'val': val,
                     })
