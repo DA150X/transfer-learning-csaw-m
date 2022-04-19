@@ -155,8 +155,11 @@ def augment_dataset(dataset, scale_factor, output_dir, output_name):
     write_images_to_temporary_directory(dataset, output_dir)
     num_cancer = len(list(pathlib.Path(output_dir + '/tmp/1_cancer').glob('*')))
     num_not_cancer = len(list(pathlib.Path(output_dir + '/tmp/0_not_cancer').glob('*')))
-    num_cancer_target = num_cancer * scale_factor
-    num_not_cancer_target = num_not_cancer * scale_factor
+
+    # ensure the dataset becomes balanced
+    target_number = num_not_cancer * scale_factor
+    # num_cancer_target = num_cancer * scale_factor
+    # num_not_cancer_target = num_not_cancer * scale_factor
 
     p = Augmentor.Pipeline(output_dir + '/tmp/1_cancer')
     p.rotate(probability=0.7, max_left_rotation=10, max_right_rotation=10)
@@ -165,7 +168,7 @@ def augment_dataset(dataset, scale_factor, output_dir, output_name):
     p.random_contrast(probability=0.5, min_factor=1.1, max_factor=1.5)
     p.flip_left_right(probability=0.5)
     p.flip_top_bottom(probability=0.5)
-    p.sample(num_cancer_target)
+    p.sample(target_number)
 
     p = Augmentor.Pipeline(output_dir + '/tmp/0_not_cancer')
     p.rotate(probability=0.7, max_left_rotation=10, max_right_rotation=10)
@@ -174,7 +177,7 @@ def augment_dataset(dataset, scale_factor, output_dir, output_name):
     p.random_contrast(probability=0.5, min_factor=1.1, max_factor=1.5)
     p.flip_left_right(probability=0.5)
     p.flip_top_bottom(probability=0.5)
-    p.sample(num_not_cancer_target)
+    p.sample(target_number)
 
     shutil.move(output_dir + '/tmp/1_cancer/output', f'{output_dir}/{output_name}/1_cancer')
     shutil.move(output_dir + '/tmp/0_not_cancer/output', f'{output_dir}/{output_name}/0_not_cancer')
