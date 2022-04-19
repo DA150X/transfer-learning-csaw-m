@@ -40,10 +40,11 @@ for metric in metrics:
             sample = cols[1]
             batch_size = int(cols[2])
             learning_rate = Decimal(cols[3])
-            epoch = int(cols[4])
-            value = Decimal(cols[5])
+            loss_function = cols[4]
+            epoch = int(cols[5])
+            value = Decimal(cols[6])
 
-            main_label = f'#N-{network_name}#S-{sample}-#B-{batch_size}-#LR{learning_rate}'
+            main_label = f'#N-{network_name}#S-{sample}-#B-{batch_size}-#LR{learning_rate}#LOSS-{loss_function}'
             if main_label not in values:
                 values[main_label] = []
             if main_label not in epochs:
