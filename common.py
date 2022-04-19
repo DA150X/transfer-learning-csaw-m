@@ -280,46 +280,6 @@ def train(
     f1 += history_fine.history['f1_metric']
     val_f1 += history_fine.history['val_f1_metric']
 
-    recorded_values = {
-        'acc': acc,
-        'acc_val': val_acc,
-        'loss': loss,
-        'loss_val': val_loss,
-        'auc': auc,
-        'auc_val': val_auc,
-        'f1': f1,
-        'f1_val': val_f1,
-    }
-    if save_root is not None:
-        for recorded_value in recorded_values:
-            fields = [
-                'network_name',
-                'sample',
-                'batch_size',
-                'learning_rate',
-                'epoch',
-                'val',
-            ]
-            filename_csv = f'{save_root}/{recorded_value}.csv'
-            if not os.path.exists(filename_csv):
-                with open(filename_csv, 'w') as csv_file:
-                    writer = csv.DictWriter(csv_file, fieldnames=fields)
-                    writer.writeheader()
-
-            i = 0
-            for val in recorded_values[recorded_value]:
-                i += 1
-                with open(filename_csv, 'a') as csv_file:
-                    writer = csv.DictWriter(csv_file, fieldnames=fields)
-                    writer.writerow({
-                        'network_name': config_params['network_name'],
-                        'sample': config_params['sample'],
-                        'batch_size': config_params['batch_size'],
-                        'learning_rate': config_params['learning_rate'],
-                        'epoch': i,
-                        'val': val,
-                    })
-
     # fig 1
     plt.figure(figsize=(8, 8))
     plt.plot(acc, label='Training Accuracy')
@@ -402,6 +362,51 @@ def train(
     print('Test accuracy: {:.2f}'.format(accuracy))
     print('Test auc     : {:.2f}'.format(auc))
     print('Test f1      : {:.2f}'.format(f1))
+
+    val_acc.append(accuracy)
+    val_loss.append(loss)
+    val_auc.append(auc)
+    val_f1.append(f1)
+
+    recorded_values = {
+        'acc': acc,
+        'acc_val': val_acc,
+        'loss': loss,
+        'loss_val': val_loss,
+        'auc': auc,
+        'auc_val': val_auc,
+        'f1': f1,
+        'f1_val': val_f1,
+    }
+    if save_root is not None:
+        for recorded_value in recorded_values:
+            fields = [
+                'network_name',
+                'sample',
+                'batch_size',
+                'learning_rate',
+                'epoch',
+                'val',
+            ]
+            filename_csv = f'{save_root}/{recorded_value}.csv'
+            if not os.path.exists(filename_csv):
+                with open(filename_csv, 'w') as csv_file:
+                    writer = csv.DictWriter(csv_file, fieldnames=fields)
+                    writer.writeheader()
+
+            i = 0
+            for val in recorded_values[recorded_value]:
+                i += 1
+                with open(filename_csv, 'a') as csv_file:
+                    writer = csv.DictWriter(csv_file, fieldnames=fields)
+                    writer.writerow({
+                        'network_name': config_params['network_name'],
+                        'sample': config_params['sample'],
+                        'batch_size': config_params['batch_size'],
+                        'learning_rate': config_params['learning_rate'],
+                        'epoch': i,
+                        'val': val,
+                    })
 
     for n in range(5):
         # Retrieve a batch of images from the test set
