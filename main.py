@@ -2,6 +2,7 @@ import os
 import tensorflow as tf
 from pathlib import Path
 from common import train
+from focal_loss import BinaryFocalLoss
 from contextlib import redirect_stdout
 from helpers import get_network, create_path_if_not_exists
 
@@ -15,13 +16,13 @@ SAVE_PATH = f'{HOME}/da150x/results/'
 samples = ['9000x2']
 batch_sizes = [32, 64]
 learning_rates = [0.01, 0.001]
-initial_epochs = 2
-fine_tune_epochs = 1
+initial_epochs = 1
+fine_tune_epochs = 0
 networks_to_train = ['ResNet50V2', 'EfficientNetB0']
 loss_functions = [
     {'slug': 'BinCrossEnt', 'func': tf.keras.losses.BinaryCrossentropy(from_logits=True)},
     {'slug': 'MeanSqLogErr', 'func': tf.keras.losses.MeanSquaredLogarithmicError(reduction=tf.keras.losses.Reduction.AUTO, name='mean_squared_logarithmic_error')},
-    {'slug': 'FocalCross', 'func': tf.keras.losses.SigmoidFocalCrossEntropy(from_logits=True)},
+    {'slug': 'FocalLoss', 'func': BinaryFocalLoss(gamma=2)},
 ]
 
 

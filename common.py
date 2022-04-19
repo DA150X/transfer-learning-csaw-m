@@ -358,16 +358,16 @@ def train(
     plt.savefig(save_path + '/pass2_f1.png')
     plt.close()
 
-    loss, accuracy, auc, f1 = model.evaluate(test_dataset)
-    print('Test loss    : {:.2f}'.format(loss))
-    print('Test accuracy: {:.2f}'.format(accuracy))
-    print('Test auc     : {:.2f}'.format(auc))
-    print('Test f1      : {:.2f}'.format(f1))
+    test_loss, test_accuracy, test_auc, test_f1 = model.evaluate(test_dataset)
+    print('Test loss    : {:.2f}'.format(test_loss))
+    print('Test accuracy: {:.2f}'.format(test_accuracy))
+    print('Test auc     : {:.2f}'.format(test_auc))
+    print('Test f1      : {:.2f}'.format(test_f1))
 
-    val_acc.append(accuracy)
-    val_loss.append(loss)
-    val_auc.append(auc)
-    val_f1.append(f1)
+    val_acc.append(test_accuracy)
+    val_loss.append(test_loss)
+    val_auc.append(test_auc)
+    val_f1.append(test_f1)
 
     recorded_values = {
         'acc': acc,
