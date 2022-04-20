@@ -20,11 +20,11 @@ initial_epochs = 7
 fine_tune_epochs = 7
 networks_to_train = ['ResNet50V2', 'EfficientNetB0', 'DenseNet169', 'InceptionV3']
 loss_functions = [
-    {'slug': 'BinCrossEnt', 'func': tf.keras.losses.BinaryCrossentropy(from_logits=True)},
-    {'slug': 'KLDivergence', 'func': tf.keras.losses.KLDivergence(reduction='auto', name='kl_divergence')},
     {'slug': 'FocalLoss', 'func': BinaryFocalLoss(gamma=2)},
     {'slug': 'Hinge', 'func': tf.keras.losses.Hinge(reduction=tf.keras.losses.Reduction.AUTO, name='hinge')},
     {'slug': 'Huber', 'func': tf.keras.losses.Huber(delta=1.0, reduction='auto', name='huber_loss')},
+    {'slug': 'BinCrossEnt', 'func': tf.keras.losses.BinaryCrossentropy(from_logits=True)},
+    {'slug': 'KLDivergence', 'func': tf.keras.losses.KLDivergence(reduction='auto', name='kl_divergence')},
 ]
 
 
