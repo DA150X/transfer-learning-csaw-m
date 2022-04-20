@@ -14,15 +14,17 @@ SAMPLE_PATH = f'{HOME}/da150x/samples/'
 SAVE_PATH = f'{HOME}/da150x/results/'
 # samples = ['3000x10', '6000x10', '9000x10', '3000x100', '6000x100', '9000x100']
 samples = ['9000x2']
-batch_sizes = [32, 64]
+batch_sizes = [32]
 learning_rates = [0.01, 0.001]
 initial_epochs = 7
 fine_tune_epochs = 7
-networks_to_train = ['ResNet50V2', 'EfficientNetB0']
+networks_to_train = ['ResNet50V2', 'EfficientNetB0', 'DenseNet169', 'InceptionV3']
 loss_functions = [
     {'slug': 'BinCrossEnt', 'func': tf.keras.losses.BinaryCrossentropy(from_logits=True)},
-    {'slug': 'MeanSqLogErr', 'func': tf.keras.losses.MeanSquaredLogarithmicError(reduction=tf.keras.losses.Reduction.AUTO, name='mean_squared_logarithmic_error')},
+    {'slug': 'KLDivergence', 'func': tf.keras.losses.KLDivergence(reduction='auto', name='kl_divergence')},
     {'slug': 'FocalLoss', 'func': BinaryFocalLoss(gamma=2)},
+    {'slug': 'Hinge', 'func': tf.keras.losses.Hinge(reduction=tf.keras.losses.Reduction.AUTO, name='hinge')},
+    {'slug': 'Huber', 'func': tf.keras.losses.Huber(delta=1.0, reduction='auto', name='huber_loss')},
 ]
 
 
