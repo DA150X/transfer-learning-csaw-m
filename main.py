@@ -15,7 +15,7 @@ SAVE_PATH = f'{HOME}/da150x/results/'
 # samples = ['3000x10', '6000x10', '9000x10', '3000x100', '6000x100', '9000x100']
 samples = ['9000x2']
 batch_sizes = [32]
-learning_rates = [0.01, 0.001]
+learning_rates = [0.01, 0.001, 0.1, 1]
 initial_epochs = 7
 fine_tune_epochs = 7
 networks_to_train = ['ResNet50V2', 'EfficientNetB0', 'DenseNet169', 'InceptionV3']
@@ -29,15 +29,15 @@ loss_functions = [
 
 
 for sample in samples:
-    for network_name in networks_to_train:
-        network, preprocess_input, layers_to_fine_tune = get_network(network_name)
+    for learning_rate in learning_rates:
+        for network_name in networks_to_train:
+            network, preprocess_input, layers_to_fine_tune = get_network(network_name)
 
-        for loss_function in loss_functions:
-            loss_function_func = loss_function['func']
-            loss_function_slug = loss_function['slug']
+            for loss_function in loss_functions:
+                loss_function_func = loss_function['func']
+                loss_function_slug = loss_function['slug']
 
-            for batch_size in batch_sizes:
-                for learning_rate in learning_rates:
+                for batch_size in batch_sizes:
                     config_name = f'#N-{network_name}#S-{sample}-#B-{batch_size}-#LR{learning_rate}#LOSS-{loss_function_slug}'
                     config_params = {
                         'network_name': network_name,
