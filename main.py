@@ -29,12 +29,13 @@ loss_functions = [
 
 
 for sample in samples:
-    for loss_function in loss_functions:
-        loss_function_func = loss_function['func']
-        loss_function_slug = loss_function['slug']
+    for network_name in networks_to_train:
+        network, preprocess_input, layers_to_fine_tune = get_network(network_name)
 
-        for network_name in networks_to_train:
-            network, preprocess_input, layers_to_fine_tune = get_network(network_name)
+        for loss_function in loss_functions:
+            loss_function_func = loss_function['func']
+            loss_function_slug = loss_function['slug']
+
             for batch_size in batch_sizes:
                 for learning_rate in learning_rates:
                     config_name = f'#N-{network_name}#S-{sample}-#B-{batch_size}-#LR{learning_rate}#LOSS-{loss_function_slug}'
