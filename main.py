@@ -15,14 +15,24 @@ SAVE_PATH = f'{HOME}/da150x/results/'
 # samples = ['3000x10', '6000x10', '9000x10', '3000x100', '6000x100', '9000x100']
 samples = ['9000x2']
 batch_sizes = [16]
-learning_rates = [0.01, 0.001, 0.1, 1]
+learning_rates = [0.01, 1, 0.001, 0.1]
 initial_epochs = 7
 fine_tune_epochs = 7
-networks_to_train = ['EfficientNetV2B0', 'EfficientNetV2B1', 'ResNet50V2', 'EfficientNetB0', 'DenseNet169', 'InceptionV3']
+networks_to_train = [
+    'ResNet50V2',
+    'EfficientNetV2L',
+    'EfficientNetV2M',
+    'EfficientNetV2S',
+    'DenseNet169',
+    'InceptionV3',
+    'EfficientNetV2B3',
+    'EfficientNetV2B0',
+    'EfficientNetB7',
+    'EfficientNetB1',
+]
 loss_functions = [
     {'slug': 'BinCrossEnt', 'func': tf.keras.losses.BinaryCrossentropy(from_logits=True)},
 ]
-
 
 for sample in samples:
     for learning_rate in learning_rates:
