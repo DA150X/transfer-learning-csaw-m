@@ -34,6 +34,12 @@ def get_network(name):
         return tf.keras.applications.EfficientNetV2B2, tf.keras.applications.efficientnet_v2.preprocess_input, 4
     elif name == 'EfficientNetV2B3':
         return tf.keras.applications.EfficientNetV2B3, tf.keras.applications.efficientnet_v2.preprocess_input, 4
+    elif name == 'EfficientNetV2S':
+        return tf.keras.applications.EfficientNetV2S, tf.keras.applications.efficientnet_v2.preprocess_input, 4
+    elif name == 'EfficientNetV2M':
+        return tf.keras.applications.EfficientNetV2M, tf.keras.applications.efficientnet_v2.preprocess_input, 4
+    elif name == 'EfficientNetV2L':
+        return tf.keras.applications.EfficientNetV2L, tf.keras.applications.efficientnet_v2.preprocess_input, 4
     elif name == 'VGG16':
         return tf.keras.applications.VGG16, tf.keras.applications.vgg16.preprocess_input, 1
     elif name == 'DenseNet169':
