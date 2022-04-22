@@ -8,6 +8,8 @@ def get_network(name):
         return tf.keras.applications.ResNet50V2, tf.keras.applications.resnet_v2.preprocess_input, 3
     elif name == 'ResNet50':
         return tf.keras.applications.ResNet50, tf.keras.applications.resnet.preprocess_input, 2
+    elif name == 'ResNet101V2':
+        return tf.keras.applications.resnet_v2.ResNet101V2, tf.keras.applications.resnet_v2.preprocess_input, 3
     elif name == 'ResNet152V2':
         return tf.keras.applications.resnet_v2.ResNet152V2, tf.keras.applications.resnet_v2.preprocess_input, 3
     elif name == 'ResNet101':
