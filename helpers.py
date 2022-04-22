@@ -8,6 +8,8 @@ def get_network(name):
         return tf.keras.applications.ResNet50V2, tf.keras.applications.resnet_v2.preprocess_input, 3
     elif name == 'ResNet50':
         return tf.keras.applications.ResNet50, tf.keras.applications.resnet.preprocess_input, 2
+    elif name == 'ResNet152V2':
+        return tf.keras.applications.resnet_v2.ResNet152V2, tf.keras.applications.resnet_v2.preprocess_input, 3
     elif name == 'ResNet101':
         return tf.keras.applications.ResNet101, tf.keras.applications.resnet.preprocess_input, 2
     elif name == 'EfficientNetB0':
@@ -47,7 +49,9 @@ def get_network(name):
     # elif name == 'ResNet34':
     #     return Classifiers.get('resnet34'), 3 # 'Keras Zoo' models requires a ImageNet weight file located at /weights
     elif name == 'InceptionV3':
-        return tf.keras.applications.InceptionV3 , tf.keras.applications.inception_v3.preprocess_input, 3
+        return tf.keras.applications.InceptionV3, tf.keras.applications.inception_v3.preprocess_input, 3
+    elif name == 'InceptionResNetV2':
+        return tf.keras.applications.InceptionResNetV2, tf.keras.applications.inception_resnet_v2.preprocess_input, 4
     else:
         print('Network not found')
 
