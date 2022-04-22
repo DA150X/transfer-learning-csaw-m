@@ -14,14 +14,12 @@ SAMPLE_PATH = f'{HOME}/da150x/samples/'
 SAVE_PATH = f'{HOME}/da150x/results/'
 # samples = ['3000x10', '6000x10', '9000x10', '3000x100', '6000x100', '9000x100']
 samples = ['9000x2']
-batch_sizes = [16]
-learning_rates = [0.01, 1, 0.001, 0.1]
-initial_epochs = 7
-fine_tune_epochs = 7
+batch_sizes = [32]
+learning_rates = [0.01]
+initial_epochs = 10
+fine_tune_epochs = 10
 networks_to_train = [
     'ResNet50V2',
-    'EfficientNetV2L',
-    'EfficientNetV2M',
     'EfficientNetV2S',
     'DenseNet169',
     'InceptionV3',
