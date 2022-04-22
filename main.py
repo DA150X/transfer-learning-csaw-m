@@ -20,13 +20,16 @@ initial_epochs = 10
 fine_tune_epochs = 10
 networks_to_train = [
     'ResNet50V2',
-    'EfficientNetV2S',
-    'DenseNet169',
-    'InceptionV3',
-    'EfficientNetV2B3',
+    'EfficientNetB0',
     'EfficientNetV2B0',
-    'EfficientNetB7',
-    'EfficientNetB1',
+
+    # nice to have
+    # 'DenseNet169',
+    # 'InceptionV3',
+    # 'EfficientNetV2S',
+    # 'EfficientNetV2B3',
+    # 'EfficientNetB7',
+    # 'ResNet101V2'
 ]
 loss_functions = [
     {'slug': 'BinCrossEnt', 'func': tf.keras.losses.BinaryCrossentropy(from_logits=True)},
