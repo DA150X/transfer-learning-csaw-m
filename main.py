@@ -12,8 +12,39 @@ tf.keras.backend.set_image_data_format('channels_last')
 HOME = str(Path.home())
 SAMPLE_PATH = f'{HOME}/da150x/samples/'
 SAVE_PATH = f'{HOME}/da150x/results/'
-# samples = ['3000x10', '6000x10', '9000x10', '3000x100', '6000x100', '9000x100']
-samples = ['9000x2']
+samples = [
+    # x1
+    '500x1',
+    '1000x1',
+    '3000x1',
+    '5000x1',
+    '7000x1',
+    '9523x1',
+
+    # x10
+    '500x10',
+    '1000x10',
+    '3000x10',
+    '5000x10',
+    '7000x10',
+    '9523x10',
+
+    # x20
+    '500x20',
+    '1000x20',
+    '3000x20',
+    '5000x20',
+    '7000x20',
+    '9523x20',
+
+    # x30
+    '500x30',
+    '1000x30',
+    '3000x30',
+    '5000x30',
+    '7000x30',
+    '9523x30',
+]
 batch_sizes = [32]
 learning_rates = [0.01]
 initial_epochs = 10
