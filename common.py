@@ -62,21 +62,6 @@ def train(
         f1_metric
     ]
 
-    neg = 8894  # Number of negatives in the training dataset
-    pos = 629   # Number of positives in the training dataset
-    total = neg + pos
-
-    multiplier_for_0 = 1
-    multiplier_for_1 = 1
-
-    weight_for_0 = (1 / neg) * (total / 2.0) * multiplier_for_0
-    weight_for_1 = (1 / pos) * (total / 2.0) * multiplier_for_1
-
-    class_weight = {0: weight_for_0, 1: weight_for_1}
-
-    print('Weight for class 0: {:.2f}'.format(weight_for_0))
-    print('Weight for class 1: {:.2f}'.format(weight_for_1))
-
     # Make a directory to store plots and prints
     if not os.path.exists(save_path):
         os.mkdir(save_path)
@@ -182,7 +167,6 @@ def train(
         train_dataset,
         epochs=initial_epochs,
         validation_data=validation_dataset,
-        class_weight=class_weight
     )
 
     # Learning curves
@@ -266,7 +250,6 @@ def train(
         epochs=total_epochs,
         initial_epoch=history.epoch[-1],
         validation_data=validation_dataset,
-        class_weight=class_weight
     )
 
     acc += history_fine.history['accuracy']
