@@ -53,6 +53,7 @@ def train(
     save_root=None,
     config_params=None,
     loss_function=None,
+    fine_tune_learning_rate_multiplier=0.1
 ):
     tf.keras.backend.set_image_data_format('channels_last')
 
@@ -146,6 +147,7 @@ def train(
 
     model = tf.keras.Model(inputs, outputs)
 
+    print(f'base_learning_rate={base_learning_rate}')
     model.compile(
         optimizer=tf.keras.optimizers.Adam(learning_rate=base_learning_rate),
         loss=loss_function,
@@ -235,8 +237,11 @@ def train(
     for layer in base_model.layers[:fine_tune_at]:
         layer.trainable = False
 
+    fine_tune_learning_rate = base_learning_rate * fine_tune_learning_rate_multiplier
+    print(f'fine_tune_learning_rate={fine_tune_learning_rate}')
+
     model.compile(
-        optimizer=tf.keras.optimizers.Adam(learning_rate=base_learning_rate / 10),
+        optimizer=tf.keras.optimizers.Adam(learning_rate=fine_tune_learning_rate),
         loss=loss_function,
         metrics=metrics,
     )

@@ -69,7 +69,7 @@ loss_functions = [
 for sample in samples:
     for learning_rate in learning_rates:
         for network_name in networks_to_train:
-            network, preprocess_input, layers_to_fine_tune = get_network(network_name)
+            network, preprocess_input, layers_to_fine_tune, fine_tune_learning_rate_multiplier = get_network(network_name)
 
             for loss_function in loss_functions:
                 loss_function_func = loss_function['func']
@@ -103,6 +103,7 @@ for sample in samples:
                             save_root=SAVE_PATH,
                             config_params=config_params,
                             loss_function=loss_function_func,
+                            fine_tune_learning_rate_multiplier=fine_tune_learning_rate_multiplier,
                         )
 
                     print('Finished ' + output_path)
