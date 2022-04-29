@@ -22,9 +22,10 @@ class Image:
 
 
 class Dataset:
-    def __init__(self, path):
+    def __init__(self, path, label_src):
         self.train_images = []
         self.test_images = []
+        self.label_src = label_src
 
         labels_path = f'{path}/labels/CSAW-M_train.csv'
         with open(labels_path, newline='') as csvfile:
@@ -32,7 +33,7 @@ class Dataset:
             count = 0
             for row in reader:
                 filename = row['Filename']
-                cancer = bool(int(row['If_cancer']))
+                cancer = bool(int(row[label_src]))
 
                 label = '0_not_cancer'
                 if cancer:
@@ -47,7 +48,7 @@ class Dataset:
             count = 0
             for row in reader:
                 filename = row['Filename']
-                cancer = bool(int(row['If_cancer']))
+                cancer = bool(int(row[label_src]))
 
                 label = '0_not_cancer'
                 if cancer:
@@ -90,6 +91,13 @@ def get_argument_parser():
     )
 
     parser.add_argument(
+        'label',
+        type=str,
+        choices=['If_cancer', 'If_interval_cancer', 'If_large_invasive_cancer', 'If_composite'],
+        help='label to select cancer/not cancer from',
+    )
+
+    parser.add_argument(
         '--ignore-output-exists',
         action='store_true',
         default=False,
@@ -109,6 +117,7 @@ def parse_input(args):
     output = args.output
     sample_sizes = args.sample_sizes.split(',')
     scale_factor = args.scale_factor
+    label = args.label
 
     for i, sample in enumerate(sample_sizes):
         try:
@@ -116,7 +125,7 @@ def parse_input(args):
         except ValueError:
             fail(f'bad sample size: "{sample}"')
 
-    return path_to_csaw_m, output, sample_sizes, scale_factor
+    return path_to_csaw_m, output, sample_sizes, scale_factor, label
 
 
 def write_images_to_temporary_directory(images, output_dir):
@@ -131,8 +140,8 @@ def write_images_to_temporary_directory(images, output_dir):
         image.write_to_dir(tmpdir)
 
 
-def generate_samples(dataset, size, scale_factor, output):
-    print(f'scaling {size} by {scale_factor}')
+def generate_samples(dataset, size, scale_factor, output, label):
+    print(f'scaling {size} by {scale_factor} with label {label}')
     train_subset = random.sample(dataset.train_images, size)
     test_subset = dataset.test_images
 
@@ -145,10 +154,10 @@ def generate_samples(dataset, size, scale_factor, output):
     print('validation_subset', len(validation_subset))
     print('test_subset', len(test_subset))
 
-    augment_dataset(train_subset, scale_factor, output, f'{size}x{scale_factor}/train')
-    augment_dataset(validation_subset, scale_factor, output, f'{size}x{scale_factor}/validation')
+    augment_dataset(train_subset, scale_factor, output, f'{size}x{scale_factor}-{label}/train')
+    augment_dataset(validation_subset, scale_factor, output, f'{size}x{scale_factor}-{label}/validation')
     for image in test_subset:
-        image.write_to_dir(f'{output}/{size}x{scale_factor}/test')
+        image.write_to_dir(f'{output}/{size}x{scale_factor}-{label}/test')
 
 
 def augment_dataset(dataset, scale_factor, output_dir, output_name):
@@ -188,15 +197,16 @@ def main():
     parser = get_argument_parser()
     args = parser.parse_args(sys.argv[1:])
 
-    path_to_csaw_m, output, sample_sizes, scale_factor = parse_input(args)
+    path_to_csaw_m, output, sample_sizes, scale_factor, label = parse_input(args)
 
     print('Input parameters')
     print(f'path to csaw-m:   {path_to_csaw_m}')
     print(f'output directory: {output}')
     print(f'sample sizes:     {sample_sizes}')
     print(f'scale factor:     {scale_factor}')
+    print(f'label:            {label}')
 
-    dataset = Dataset(path_to_csaw_m)
+    dataset = Dataset(path_to_csaw_m, label)
 
     while pathlib.Path(output).exists() and not args.ignore_output_exists:
         print(f'Output dir {output} already exists. Would you like to delete, or abort')
@@ -209,7 +219,7 @@ def main():
     pathlib.Path(output).mkdir(parents=True, exist_ok=True)
 
     for size in sample_sizes:
-        generate_samples(dataset, size, scale_factor, output)
+        generate_samples(dataset, size, scale_factor, output, label)
 
 
 if __name__ == '__main__':
