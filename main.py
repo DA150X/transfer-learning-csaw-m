@@ -13,6 +13,20 @@ HOME = str(Path.home())
 SAMPLE_PATH = f'{HOME}/da150x/samples/'
 SAVE_PATH = f'{HOME}/da150x/results/'
 samples = [
+    # 100 images
+    '100x1-If_cancer',
+    '100x1-If_interval_cancer',
+    '100x1-If_large_invasive_cancer',
+    '100x1-If_composite',
+    '100x2-If_cancer',
+    '100x2-If_interval_cancer',
+    '100x2-If_large_invasive_cancer',
+    '100x2-If_composite',
+    '100x3-If_cancer',
+    '100x3-If_interval_cancer',
+    '100x3-If_large_invasive_cancer',
+    '100x3-If_composite',
+
     # x3
     '500x3',
     '1000x3',
