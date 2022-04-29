@@ -140,15 +140,40 @@ def write_images_to_temporary_directory(images, output_dir):
         image.write_to_dir(tmpdir)
 
 
+def dataset_valid(dataset):
+    num_cancer = 0
+    num_not_cancer = 0
+    for image in dataset:
+        if image.label == '1_cancer':
+            num_cancer += 1
+        else:
+            num_not_cancer += 1
+
+    return num_cancer != 0 and num_not_cancer != 0
+
+
 def generate_samples(dataset, size, scale_factor, output, label):
     print(f'scaling {size} by {scale_factor} with label {label}')
-    train_subset = random.sample(dataset.train_images, size)
-    test_subset = dataset.test_images
+    found_valid = False
 
-    # remove subset
-    index = int((len(train_subset) * (20/100)))
-    validation_subset = train_subset[:index]
-    train_subset = train_subset[index:]
+    train_subset = None
+    validation_subset = None
+    test_subset = None
+
+    while not found_valid:
+        train_subset = random.sample(dataset.train_images, size)
+        test_subset = dataset.test_images
+
+        # remove subset
+        index = int((len(train_subset) * (20/100)))
+        validation_subset = train_subset[:index]
+        train_subset = train_subset[index:]
+
+        if dataset_valid(validation_subset) and dataset_valid(train_subset):
+            found_valid = True
+        else:
+            print('invalid datasets, generating new...')
+
 
     print('train_subset', len(train_subset))
     print('validation_subset', len(validation_subset))
