@@ -13,22 +13,6 @@ HOME = str(Path.home())
 SAMPLE_PATH = f'{HOME}/da150x/samples/'
 SAVE_PATH = f'{HOME}/da150x/results/'
 samples = [
-    # x1
-    '500x1',
-    '1000x1',
-    '3000x1',
-    '5000x1',
-    '7000x1',
-    '9523x1',
-
-    # x2
-    '500x2',
-    '1000x2',
-    '3000x2',
-    '5000x2',
-    '7000x2',
-    '9523x2',
-
     # x3
     '500x3',
     '1000x3',
@@ -36,6 +20,90 @@ samples = [
     '5000x3',
     '7000x3',
     '9523x3',
+
+    # x1
+    '500x1-If_interval_cancer',
+    '500x1-If_large_invasive_cancer',
+    '500x1-If_composite',
+    '1000x1-If_interval_cancer',
+    '1000x1-If_large_invasive_cancer',
+    '1000x1-If_composite',
+    '3000x1-If_interval_cancer',
+    '3000x1-If_large_invasive_cancer',
+    '3000x1-If_composite',
+    '5000x1-If_interval_cancer',
+    '5000x1-If_large_invasive_cancer',
+    '5000x1-If_composite',
+    '7000x1-If_interval_cancer',
+    '7000x1-If_large_invasive_cancer',
+    '7000x1-If_composite',
+    '9523x1-If_interval_cancer',
+    '9523x1-If_large_invasive_cancer',
+    '9523x1-If_composite',
+
+    # x2
+    '500x2-If_interval_cancer',
+    '500x2-If_large_invasive_cancer',
+    '500x2-If_composite',
+    '1000x2-If_interval_cancer',
+    '1000x2-If_large_invasive_cancer',
+    '1000x2-If_composite',
+    '3000x2-If_interval_cancer',
+    '3000x2-If_large_invasive_cancer',
+    '3000x2-If_composite',
+    '5000x2-If_interval_cancer',
+    '5000x2-If_large_invasive_cancer',
+    '5000x2-If_composite',
+    '7000x2-If_interval_cancer',
+    '7000x2-If_large_invasive_cancer',
+    '7000x2-If_composite',
+    '9523x2-If_interval_cancer',
+    '9523x2-If_large_invasive_cancer',
+    '9523x2-If_composite',
+
+    # x3
+    '500x3-If_interval_cancer',
+    '500x3-If_large_invasive_cancer',
+    '500x3-If_composite',
+    '1000x3-If_interval_cancer',
+    '1000x3-If_large_invasive_cancer',
+    '1000x3-If_composite',
+    '3000x3-If_interval_cancer',
+    '3000x3-If_large_invasive_cancer',
+    '3000x3-If_composite',
+    '5000x3-If_interval_cancer',
+    '5000x3-If_large_invasive_cancer',
+    '5000x3-If_composite',
+    '7000x3-If_interval_cancer',
+    '7000x3-If_large_invasive_cancer',
+    '7000x3-If_composite',
+    '9523x3-If_interval_cancer',
+    '9523x3-If_large_invasive_cancer',
+    '9523x3-If_composite',
+
+    # x1
+    '500x1-If_cancer',
+    '1000x1-If_cancer',
+    '3000x1-If_cancer',
+    '5000x1-If_cancer',
+    '7000x1-If_cancer',
+    '9523x1-If_cancer',
+
+    # x2
+    '500x2-If_cancer',
+    '1000x2-If_cancer',
+    '3000x2-If_cancer',
+    '5000x2-If_cancer',
+    '7000x2-If_cancer',
+    '9523x2-If_cancer',
+
+    # x3
+    '500x3-If_cancer',
+    '1000x3-If_cancer',
+    '3000x3-If_cancer',
+    '5000x3-If_cancer',
+    '7000x3-If_cancer',
+    '9523x3-If_cancer',
 ]
 batch_sizes = [32]
 learning_rates = [0.01]
