@@ -47,7 +47,7 @@ def create_chart_for_metric(metric, args):
         '100': '#00876c',
         '500': '#63b179',
         '1000': '#aed987',
-        '3000': '#ffff9d',
+        '3000': '#C5C98E',  # custom
         '5000': '#fcc267',
         '7000': '#ef8250',
         '9523': '#d43d51',
@@ -89,7 +89,7 @@ def create_chart_for_metric(metric, args):
                 filename = f'validation_{label}_{metric}'
             else:
                 filename = f'train_{label}_{metric}'
-            ensure_outputdir_and_write_chart(args.path_to_output + '/curves_by_sample_size', plt, filename)
+            ensure_outputdir_and_write_chart(args.path_to_output + '/curves_by_sample_size', plt, filename, dpi=100)
 
 
 def make_y_axis_label(metric, label, validation):

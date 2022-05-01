@@ -160,9 +160,9 @@ def read_csv_results(path_to_csv, validation):
     return rows
 
 
-def ensure_outputdir_and_write_chart(output_dir, plt, filename):
+def ensure_outputdir_and_write_chart(output_dir, plt, filename, dpi=100):
     if not Path(output_dir).exists():
         Path(output_dir).mkdir()
 
-    plt.savefig(f'{output_dir}/{filename}')
+    plt.savefig(f'{output_dir}/{filename}', dpi=dpi)
     plt.close()
