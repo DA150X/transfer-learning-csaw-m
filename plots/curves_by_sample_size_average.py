@@ -88,7 +88,7 @@ def create_chart_for_metric(metric, args):
                 Line2D([0], [0], color=colors['5000'], lw=4),
                 Line2D([0], [0], color=colors['7000'], lw=4),
                 Line2D([0], [0], color=colors['9523'], lw=4),
-                Line2D([0], [0], color=colors['fine-tune'], lw=4),
+                Line2D([0], [0], color=colors['fine-tune'], lw=4, alpha=0.5),
             ]
             ax.legend(custom_lines, ['100', '500', '1000', '3000', '5000', '7000', '9523', 'Start Fine Tuning'], loc='upper left', title='Legend', bbox_to_anchor=(1.05, 1))
             plt.tight_layout()

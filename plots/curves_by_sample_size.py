@@ -16,7 +16,7 @@ from common import (
 
 
 def main():
-    parser = get_argument_parser('validation_curves_by_sample_size')
+    parser = get_argument_parser('curves_by_sample_size')
     args = parser.parse_args(sys.argv[1:])
 
     metrics = [
@@ -80,7 +80,7 @@ def create_chart_for_metric(metric, args):
                 Line2D([0], [0], color=colors['5000'], lw=4),
                 Line2D([0], [0], color=colors['7000'], lw=4),
                 Line2D([0], [0], color=colors['9523'], lw=4),
-                Line2D([0], [0], color=colors['fine-tune'], lw=4),
+                Line2D([0], [0], color=colors['fine-tune'], lw=4, alpha=0.5),
             ]
             ax.legend(custom_lines, ['100', '500', '1000', '3000', '5000', '7000', '9523', 'Start Fine Tuning'], loc='upper left', title='Legend', bbox_to_anchor=(1.05, 1))
             plt.tight_layout()
@@ -89,7 +89,7 @@ def create_chart_for_metric(metric, args):
                 filename = f'validation_{label}_{metric}'
             else:
                 filename = f'train_{label}_{metric}'
-            ensure_outputdir_and_write_chart(args.path_to_output + '/curves_by_sample_size', plt, filename, dpi=100)
+            ensure_outputdir_and_write_chart(args.path_to_output + '/curves_by_sample_size', plt, filename, dpi=300)
 
 
 def make_y_axis_label(metric, label, validation):
