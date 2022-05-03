@@ -66,7 +66,7 @@ def create_chart_for_metric(metric, args):
             ax.xaxis.set_major_formatter(ticker.FormatStrFormatter('%i'))
 
             for sample_size in sample_sizes:
-                values, epochs = get_results_for_sample_size_and_label(args.path_to_csv, sample_size, label, metric, validation=True)
+                values, epochs = get_results_for_sample_size_and_label(args.path_to_csv, sample_size, label, metric, validation=validation)
                 if len(values.keys()) == 0:
                     continue
                 length = len(values[list(values.keys())[0]])

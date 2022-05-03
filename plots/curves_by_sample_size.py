@@ -65,12 +65,12 @@ def create_chart_for_metric(metric, args):
             ax.xaxis.set_major_formatter(ticker.FormatStrFormatter('%i'))
 
             for sample_size in sample_sizes:
-                values, epochs = get_results_for_sample_size_and_label(args.path_to_csv, sample_size, label, metric, validation=True)
+                values, epochs = get_results_for_sample_size_and_label(args.path_to_csv, sample_size, label, metric, validation=validation)
                 for name in values:
                     plt.plot(epochs[name], values[name], label=name, color=colors[sample_size], alpha=0.5)
 
             plt.ylim([min(plt.ylim()) - 0.1 * max(plt.ylim()), max(plt.ylim()) + 0.1 * max(plt.ylim())])
-            plt.plot([9, 9], plt.ylim(), alpha=.5, color=colors['fine-tune'])  # fine-tune line
+            plt.plot([10, 10], plt.ylim(), alpha=.5, color=colors['fine-tune'])  # fine-tune line
 
             custom_lines = [
                 Line2D([0], [0], color=colors['100'], lw=4),
