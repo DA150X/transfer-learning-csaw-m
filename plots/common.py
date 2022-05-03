@@ -82,7 +82,7 @@ def get_results_for_sample_size_and_label(path_to_results, sample_size, label, m
 
 
 
-def get_test_results(path_to_results, metric):
+def get_test_results_for_label_and_sample_size(path_to_results, metric, label, sample_size):
     filename_metric = f'{path_to_results}/{metric}'
     results = read_csv_results(filename_metric, validation=True)
 
@@ -93,6 +93,10 @@ def get_test_results(path_to_results, metric):
         networkname = row['network_name']
         sample = row['sample']
         selector = f'{networkname} {sample}'
+        if row['label'] != label:
+            continue
+        if row['sample_size'] != sample_size:
+            continue
 
         # establish data type, and last will always be after training and fine-tuning
         before_and_after[selector] = {'before': before_scores[row['config_name']], 'after': row['value']}
