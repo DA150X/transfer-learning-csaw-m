@@ -54,6 +54,32 @@ def get_labels(path_to_results, metric):
     return labels
 
 
+def get_networks(path_to_results, metric):
+    filename_metric = f'{path_to_results}/{metric}'
+    results = read_csv_results(filename_metric, validation=True)
+
+    networks = []
+    for row in results:
+        network = row['network_name']
+        if network not in networks:
+            networks.append(network)
+
+    return networks
+
+
+def get_scale_factors(path_to_results, metric):
+    filename_metric = f'{path_to_results}/{metric}'
+    results = read_csv_results(filename_metric, validation=True)
+
+    scale_factors = []
+    for row in results:
+        scale_factor = row['scale_factor']
+        if scale_factor not in scale_factors:
+            scale_factors.append(scale_factor)
+
+    return scale_factors
+
+
 def get_results_for_sample_size_and_label(path_to_results, sample_size, label, metric, validation):
     filename_metric = f'{path_to_results}/{metric}'
     results = read_csv_results(filename_metric, validation=validation)
@@ -104,6 +130,37 @@ def get_test_results_for_label_and_sample_size(path_to_results, metric, label, s
     return before_and_after
 
 
+def get_test_results_for_label_network_scale_factor_and_sample_size(
+    path_to_results,
+    metric,
+    label,
+    network,
+    scale_factor,
+    sample_size
+):
+    filename_metric = f'{path_to_results}/{metric}'
+    results = read_csv_results(filename_metric, validation=True)
+
+    before_scores = get_before_scores(path_to_results, metric)
+
+    before_and_after = {'before': None, 'after': None}
+    for row in results:
+        if row['label'] != label:
+            continue
+        if row['sample_size'] != sample_size:
+            continue
+        if row['scale_factor'] != scale_factor:
+            continue
+        if row['network_name'] != network:
+            continue
+
+        # establish data type, and last will always be after training and fine-tuning
+        before_and_after['after'] = row['value']
+        before_and_after['before'] = before_scores[row['config_name']]
+
+    return before_and_after
+
+
 def get_before_scores(path_to_results, metric):
     before_scores = {}
     for config in get_all_configs(path_to_results, metric):
@@ -146,6 +203,7 @@ def read_csv_results(path_to_csv, validation):
             value = Decimal(cols[6])
             sample_size = sample.split('x')[0]
             scale_factor_and_label = sample.split('x')[1]
+            scale_factor = scale_factor_and_label.split('-')[0]
 
             if scale_factor_and_label.isdigit():
                 label = 'If_cancer'
@@ -158,6 +216,7 @@ def read_csv_results(path_to_csv, validation):
                 'sample': sample,
                 'epoch': epoch,
                 'value': value,
+                'scale_factor': scale_factor,
                 'sample_size': sample_size,
                 'label': label,
             })
