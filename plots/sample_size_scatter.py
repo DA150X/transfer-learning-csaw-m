@@ -28,6 +28,8 @@ def main():
     for metric in metrics:
         create_chart_for_metric(metric, args)
 
+    write_legend(args)
+
 
 def create_chart_for_metric(metric, args):
     sample_sizes = get_sample_sizes(args.path_to_csv, metric)
@@ -41,9 +43,9 @@ def create_chart_for_metric(metric, args):
         'axes.titlesize': 'xx-large',
         'xtick.labelsize': 'x-large',
         'ytick.labelsize': 'x-large',
+        'font.size': 18,
     })
 
-    # https://learnui.design/tools/data-color-picker.html#divergent
     colors = {
         'DenseNet169': '#003f5c',
         'EfficientNetV2B0': '#bc5090',
@@ -85,27 +87,6 @@ def create_chart_for_metric(metric, args):
                 label=network,
                 color=colors[network],
             )
-            legend1 = ax.legend(
-                title='Network',
-                loc='upper left',
-                labelspacing=1.4,
-                borderpad=1.2,
-            )
-            ax.add_artist(legend1)
-            kw = dict(
-                prop='sizes',
-                num=3,
-                color='grey',
-                fmt='{x:.4g}',
-                func=lambda s: (s / 250) - 1,
-            )
-            legend2 = ax.legend(
-                *sc.legend_elements(**kw),
-                loc='lower right',
-                title='Dataset scale factor',
-                labelspacing=1.4,
-                borderpad=1.2,
-            )
 
         # calculate the trendline
         z = np.polyfit(x_all, y_all, 1)
@@ -125,6 +106,97 @@ def create_chart_for_metric(metric, args):
 
         filename = f'{label}_{metric}'
         ensure_outputdir_and_write_chart(args.path_to_output + '/sample_size_scatter', plt, filename, dpi=300)
+
+
+def write_legend(args):
+    metric = 'auc'
+    sample_sizes = get_sample_sizes(args.path_to_csv, metric)
+    labels = get_labels(args.path_to_csv, metric)
+    networks = get_networks(args.path_to_csv, metric)
+
+    pylab.rcParams.update({
+        'legend.title_fontsize': 'xx-large',
+        'legend.fontsize': 'x-large',
+        'axes.labelsize': 'x-large',
+        'axes.titlesize': 'xx-large',
+        'xtick.labelsize': 'x-large',
+        'ytick.labelsize': 'x-large',
+        'font.size': 18,
+        'legend.edgecolor': '#ffffff',
+    })
+
+    colors = {
+        'DenseNet169': '#003f5c',
+        'EfficientNetV2B0': '#bc5090',
+        'ResNet50V2': '#ffa600',
+    }
+
+    for label in labels:
+        plt.figure(figsize=(14, 10))
+        fig, ax = plt.subplots(figsize=(14, 10))
+        x_all = []
+        y_all = []
+        for network in networks:
+            inc = 0
+            x = []
+            y = []
+            z = []
+            for sample_size in sample_sizes:
+                values = get_test_results_for_label_network_and_sample_size(args.path_to_csv, metric, label, network, sample_size)
+                for scale_factor, value in values.items():
+                    scale_factor = int(scale_factor)
+                    x.append(inc)
+                    y.append(value)
+                    x_all.append(inc)
+                    y_all.append(float(value))
+                    z.append(100 + (350 * scale_factor))
+                inc += 1
+
+            sc = plt.scatter(
+                x,
+                y,
+                s=z,
+                alpha=0.5,
+                label=network,
+                color=colors[network],
+            )
+            legend1 = ax.legend(
+                title='Network',
+                loc='upper left',
+                labelspacing=2,
+                borderpad=.2,
+                framealpha=1,
+                frameon=True,
+            )
+            ax.add_artist(legend1)
+            kw = dict(
+                prop='sizes',
+                num=3,
+                color='grey',
+                fmt='{x:.4g}',
+                func=lambda s: (s / 250) - 1,
+            )
+            legend2 = ax.legend(
+                *sc.legend_elements(**kw),
+                loc='lower right',
+                title='Dataset scale factor',
+                labelspacing=1.4,
+                borderpad=1.2,
+                frameon=True,
+                framealpha=1,
+            )
+
+        fig = legend1.figure
+        fig.canvas.draw()
+        bbox = legend1.get_window_extent().transformed(fig.dpi_scale_trans.inverted())
+        filename = args.path_to_output + '/sample_size_scatter/legend_1.png'
+        fig.savefig(filename, dpi='figure', bbox_inches=bbox, pad_inches=0)
+
+        fig = legend2.figure
+        fig.canvas.draw()
+        bbox = legend2.get_window_extent().transformed(fig.dpi_scale_trans.inverted())
+        filename = args.path_to_output + '/sample_size_scatter/legend_2.png'
+        fig.savefig(filename, dpi='figure', bbox_inches=bbox, pad_inches=0)
 
 
 def make_y_axis_label(metric, label):
