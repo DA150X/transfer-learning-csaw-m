@@ -130,6 +130,34 @@ def get_test_results_for_label_and_sample_size(path_to_results, metric, label, s
     return before_and_after
 
 
+def get_test_results_for_label_network_and_sample_size(
+    path_to_results,
+    metric,
+    label,
+    network,
+    sample_size
+):
+    filename_metric = f'{path_to_results}/{metric}'
+    results = read_csv_results(filename_metric, validation=True)
+
+    out = {}
+    for row in results:
+        if row['label'] != label:
+            continue
+        if row['sample_size'] != sample_size:
+            continue
+        if row['network_name'] != network:
+            continue
+
+        out[row['scale_factor']] = row['value']
+        # results
+        # establish data type, and last will always be after training and fine-tuning
+        # before_and_after['after'] = row['value']
+        # before_and_after['before'] = before_scores[row['config_name']]
+
+    return out
+
+
 def get_test_results_for_label_network_scale_factor_and_sample_size(
     path_to_results,
     metric,
