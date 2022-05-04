@@ -42,16 +42,21 @@ def create_chart_for_metric(metric, args):
             out.write(f'\\begin{{center}}\n')
             out.write(f'\\caption{{AUC Performance table for the \\textbf{{\\textit{{{safe_label}}}}} label.}}\n')
             out.write(f'\\label{{tab:table1}}\n')
-            out.write(f'\\begin{{tabular}}{{l|c|c|c|c|c|c|c}}\n')
-            out.write(f'& \\textbf{{100}} & \\textbf{{500}} & \\textbf{{1000}} & \\textbf{{3000}} & \\textbf{{5000}} & \\textbf{{7000}} & \\textbf{{9523}}\\\\\n')
+            out.write(f'\\begin{{tabular}}{{l|c|c|c|c|c|c|c|c}}\n')
+            out.write(f'& \\textbf{{Scale factor}} & \\textbf{{100}} & \\textbf{{500}} & \\textbf{{1000}} & \\textbf{{3000}} & \\textbf{{5000}} & \\textbf{{7000}} & \\textbf{{9523}}\\\\\n')
             out.write(f'\\hline\n')
             out.write(f'\\hline\n')
             out.write(f'\\noalign{{\\vskip 3pt}}\n')
 
+        if label != 'If_cancer':
+            scale_factors_to_use = ['1']
+        else:
+            scale_factors_to_use = scale_factors
+
         for network in networks:
-            for scale_factor in scale_factors:
+            for scale_factor in scale_factors_to_use:
                 with open(output_filename, 'a') as out:
-                    out.write(f'\\tt{{{network} {scale_factor}x}} ')
+                    out.write(f'\\tt{{{network}}} & \\tt{{{scale_factor}x}} ')
 
                 for sample_size in sample_sizes:
                     value = get_test_results_for_label_network_scale_factor_and_sample_size(
@@ -74,9 +79,14 @@ def create_chart_for_metric(metric, args):
                     out.write(f'\\\\\n')
 
             with open(output_filename, 'a') as out:
-                out.write(f'\\noalign{{\\vskip 6pt}}\n')
-                out.write(f'\\hline\n')
-                out.write(f'\\noalign{{\\vskip 12pt}}\n')
+                if len(scale_factors_to_use) == 1:
+                    out.write(f'\\noalign{{\\vskip 6pt}}\n')
+                    out.write(f'\\hline\n')
+                    out.write(f'\\noalign{{\\vskip 6pt}}\n')
+                else:
+                    out.write(f'\\noalign{{\\vskip 6pt}}\n')
+                    out.write(f'\\hline\n')
+                    out.write(f'\\noalign{{\\vskip 12pt}}\n')
 
         with open(output_filename, 'a') as out:
             out.write(f'\\end{{tabular}}\n')
