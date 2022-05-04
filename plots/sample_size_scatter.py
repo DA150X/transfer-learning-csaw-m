@@ -23,7 +23,7 @@ def main():
 
     metrics = [
         'auc',
-        'f1',
+        'loss',
     ]
     for metric in metrics:
         create_chart_for_metric(metric, args)
