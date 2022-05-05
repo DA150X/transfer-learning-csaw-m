@@ -42,6 +42,7 @@ def create_chart_for_metric(metric, args):
         'xtick.labelsize': 'small',
         'ytick.labelsize': 'x-large',
         'font.size': 18,
+        'font.family': 'Georgia',
     })
 
     colors = {

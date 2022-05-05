@@ -40,6 +40,7 @@ def create_chart_for_metric(metric, args):
         'axes.titlesize': 'xx-large',
         'xtick.labelsize': 'x-large',
         'ytick.labelsize': 'x-large',
+        'font.family': 'Georgia',
     })
 
     # https://learnui.design/tools/data-color-picker.html#divergent

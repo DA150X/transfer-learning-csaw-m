@@ -116,6 +116,7 @@ def write_legend_1(args):
         'xtick.labelsize': 'x-large',
         'ytick.labelsize': 'x-large',
         # 'font.size': 18,
+        'font.family': 'Georgia',
     })
 
     colors = {
