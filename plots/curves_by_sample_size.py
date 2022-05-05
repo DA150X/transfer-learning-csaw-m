@@ -28,6 +28,8 @@ def main():
     for metric in metrics:
         create_chart_for_metric(metric, args)
 
+    make_legend(args)
+
 
 def create_chart_for_metric(metric, args):
     sample_sizes = get_sample_sizes(args.path_to_csv, metric)
@@ -73,19 +75,6 @@ def create_chart_for_metric(metric, args):
             plt.ylim([min(plt.ylim()) - 0.1 * max(plt.ylim()), max(plt.ylim()) + 0.1 * max(plt.ylim())])
             plt.plot([10, 10], plt.ylim(), alpha=.5, color=colors['fine-tune'])  # fine-tune line
 
-            custom_lines = [
-                Line2D([0], [0], color=colors['100'], lw=4),
-                Line2D([0], [0], color=colors['500'], lw=4),
-                Line2D([0], [0], color=colors['1000'], lw=4),
-                Line2D([0], [0], color=colors['3000'], lw=4),
-                Line2D([0], [0], color=colors['5000'], lw=4),
-                Line2D([0], [0], color=colors['7000'], lw=4),
-                Line2D([0], [0], color=colors['9523'], lw=4),
-                Line2D([0], [0], color=colors['fine-tune'], lw=4, alpha=0.5),
-            ]
-            ax.legend(custom_lines, ['100', '500', '1000', '3000', '5000', '7000', '9523', 'Start Fine Tuning'], loc='upper left', title='Legend', bbox_to_anchor=(1.05, 1))
-            plt.tight_layout()
-
             if validation:
                 filename = f'validation_{label}_{metric}'
             else:
@@ -120,6 +109,51 @@ def make_title(metric, label, validation):
     label = label.replace('_', '\_')
     string += r' ${{{metric}}}$ for the $\bf{{{label}}}$ label'.format(metric=metric, label=label)
     return string
+
+
+def make_legend(args):
+    pylab.rcParams.update({
+        'legend.fontsize': 'x-large',
+        'axes.labelsize': 'x-large',
+        'axes.titlesize': 'xx-large',
+        'xtick.labelsize': 'x-large',
+        'ytick.labelsize': 'x-large',
+        'font.family': 'Georgia',
+    })
+
+    # https://learnui.design/tools/data-color-picker.html#divergent
+    colors = {
+        '100': '#00876c',
+        '500': '#63b179',
+        '1000': '#aed987',
+        '3000': '#C5C98E',  # custom
+        '5000': '#fcc267',
+        '7000': '#ef8250',
+        '9523': '#d43d51',
+        'fine-tune': '#444',
+    }
+
+    plt.figure(figsize=(10, 10))
+    fig, ax = plt.subplots(figsize=(10, 10))
+
+    custom_lines = [
+        Line2D([0], [0], color=colors['100'], lw=4),
+        Line2D([0], [0], color=colors['500'], lw=4),
+        Line2D([0], [0], color=colors['1000'], lw=4),
+        Line2D([0], [0], color=colors['3000'], lw=4),
+        Line2D([0], [0], color=colors['5000'], lw=4),
+        Line2D([0], [0], color=colors['7000'], lw=4),
+        Line2D([0], [0], color=colors['9523'], lw=4),
+        Line2D([0], [0], color=colors['fine-tune'], lw=4, alpha=0.5),
+    ]
+    legend = ax.legend(custom_lines, ['100', '500', '1000', '3000', '5000', '7000', '9523', 'Start Fine Tuning'], loc='upper left', title='Legend')
+    plt.tight_layout()
+
+    fig = legend.figure
+    fig.canvas.draw()
+    bbox = legend.get_window_extent().transformed(fig.dpi_scale_trans.inverted())
+    filename = args.path_to_output + '/curves_by_sample_size/legend.png'
+    fig.savefig(filename, dpi=300, bbox_inches=bbox, pad_inches=0)
 
 
 if __name__ == '__main__':
