@@ -47,13 +47,13 @@ def create_chart_for_metric(metric, args):
 
     # https://learnui.design/tools/data-color-picker.html#divergent
     colors = {
-        '100': '#00876c',
-        '500': '#63b179',
-        '1000': '#aed987',
+        '100': '#d43d51',
+        '500': '#ef8250',
+        '1000': '#fcc267',
         '3000': '#C5C98E',  # custom
-        '5000': '#fcc267',
-        '7000': '#ef8250',
-        '9523': '#d43d51',
+        '5000': '#aed987',
+        '7000': '#63b179',
+        '9523': '#00876c',
         'fine-tune': '#444',
     }
 
@@ -123,13 +123,13 @@ def make_legend(args):
 
     # https://learnui.design/tools/data-color-picker.html#divergent
     colors = {
-        '100': '#00876c',
-        '500': '#63b179',
-        '1000': '#aed987',
+        '100': '#d43d51',
+        '500': '#ef8250',
+        '1000': '#fcc267',
         '3000': '#C5C98E',  # custom
-        '5000': '#fcc267',
-        '7000': '#ef8250',
-        '9523': '#d43d51',
+        '5000': '#aed987',
+        '7000': '#63b179',
+        '9523': '#00876c',
         'fine-tune': '#444',
     }
 
