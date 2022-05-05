@@ -226,7 +226,7 @@ def make_title(metric, label):
         metric = 'AUC'
 
     label = label.replace('_', '\_')
-    string += r' ${{{metric}}}$ for the $\bf{{{label}}}$ label'.format(metric=metric, label=label)
+    string += r' $\bf{{{metric}}}$ for the $\bf{{{label}}}$ label'.format(metric=metric, label=label)
     return string
 
 
