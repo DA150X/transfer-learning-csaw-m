@@ -40,12 +40,16 @@ def create_chart_for_metric(metric, args):
             out.write(f'\\begin{{table}}[h!]\n')
             out.write(f'\\begin{{center}}\n')
             out.write(f'\\caption{{AUC Performance table for \\textbf{{\\textit{{{network}}}}}.}}\n')
-            out.write(f'\\label{{tab:table1}}\n')
+            out.write(f'\\label{{tab:auc_performance_for{network}}}\n')
             out.write(f'\\begin{{tabular}}{{l|c|c|c|c|c|c|c}}\n')
             out.write(f'& \\textbf{{100}} & \\textbf{{500}} & \\textbf{{1000}} & \\textbf{{3000}} & \\textbf{{5000}} & \\textbf{{7000}} & \\textbf{{9523}}\\\\\n')
             out.write(f'\\hline\n')
             out.write(f'\\hline\n')
             out.write(f'\\noalign{{\\vskip 3pt}}\n')
+
+        for_avg_row = {}
+        for sample_size in sample_sizes:
+            for_avg_row[sample_size] = []
 
         for label in labels:
             safe_label = label.replace('_', '\_')
@@ -73,8 +77,29 @@ def create_chart_for_metric(metric, args):
                 with open(output_filename, 'a') as out:
                     out.write(f'& {avg} ')
 
+                for_avg_row[sample_size].append(avg)
+
             with open(output_filename, 'a') as out:
                 out.write(f'\\\\\n')
+
+        with open(output_filename, 'a') as out:
+            out.write(f'\\noalign{{\\vskip 3pt}}\n')
+            out.write(f'\\hline\n')
+            out.write(f'\\noalign{{\\vskip 3pt}}\n')
+
+        with open(output_filename, 'a') as out:
+            out.write(f'Average')
+            for sample_size, values in for_avg_row.items():
+                avg = sum(values) / len(values)
+                out.write(f'& {round(avg, 2)}')
+            out.write('\\\\')
+
+        with open(output_filename, 'a') as out:
+            out.write(f'Std. dev.')
+            for sample_size, values in for_avg_row.items():
+                out.write(f'& {round(np.std(values), 2)}')
+
+            out.write('\\\\\n')
 
         with open(output_filename, 'a') as out:
             out.write(f'\\end{{tabular}}\n')
