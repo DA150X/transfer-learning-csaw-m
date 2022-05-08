@@ -92,12 +92,26 @@ def create_chart_for_metric(metric, args):
             for sample_size, values in for_avg_row.items():
                 avg = sum(values) / len(values)
                 out.write(f'& {round(avg, 2)}')
-            out.write('\\\\')
+            out.write('\\\\\n')
 
         with open(output_filename, 'a') as out:
             out.write(f'Std. dev.')
             for sample_size, values in for_avg_row.items():
                 out.write(f'& {round(np.std(values), 2)}')
+
+            out.write('\\\\\n')
+
+        with open(output_filename, 'a') as out:
+            out.write(f'Max')
+            for sample_size, values in for_avg_row.items():
+                out.write(f'& {round(max(values), 2)}')
+
+            out.write('\\\\\n')
+
+        with open(output_filename, 'a') as out:
+            out.write(f'Min')
+            for sample_size, values in for_avg_row.items():
+                out.write(f'& {round(min(values), 2)}')
 
             out.write('\\\\\n')
 
