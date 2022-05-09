@@ -41,7 +41,7 @@ def create_chart_for_metric(metric, args):
             out.write(f'\\begin{{table}}[h!]\n')
             out.write(f'\\begin{{center}}\n')
             out.write(f'\\caption{{AUC Performance table for \\textbf{{\\textit{{{network}}}}}.}}\n')
-            out.write(f'\\label{{tab:table1}}\n')
+            out.write(f'\\label{{tab:scale_factor_{network}}}\n')
             out.write(f'\\begin{{tabular}}{{l|c|c|c|c|c|c|c}}\n')
             out.write(f'& \\textbf{{100}} & \\textbf{{500}} & \\textbf{{1000}} & \\textbf{{3000}} & \\textbf{{5000}} & \\textbf{{7000}} & \\textbf{{9523}}\\\\\n')
             out.write(f'\\hline\n')
