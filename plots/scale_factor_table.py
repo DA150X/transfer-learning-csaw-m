@@ -38,7 +38,7 @@ def create_chart_for_metric(metric, args):
     for network in networks:
         safe_label = label.replace('_', '\_')
         with open(output_filename, 'a') as out:
-            out.write(f'\\begin{{table}}[h!]\n')
+            out.write(f'\\begin{{table}}[H]\n')
             out.write(f'\\begin{{center}}\n')
             out.write(f'\\caption{{AUC Performance table for \\textbf{{\\textit{{{network}}}}}.}}\n')
             out.write(f'\\label{{tab:scale_factor_{network}}}\n')
@@ -52,7 +52,7 @@ def create_chart_for_metric(metric, args):
         for scale_factor in scale_factors:
             scale_factor_vals = []
             with open(output_filename, 'a') as out:
-                out.write(f'{scale_factor}x ')
+                out.write(f'\\tt{{{scale_factor}x}} ')
             vals = []
             for sample_size in sample_sizes:
                 values = get_test_results_for_label_network_scale_factor_and_sample_size(
@@ -84,7 +84,7 @@ def create_chart_for_metric(metric, args):
             out.write(f'\\noalign{{\\vskip 3pt}}\n')
 
         with open(output_filename, 'a') as out:
-            out.write(f'stddev')
+            out.write(f'Standard deviation')
             length = len(for_std_devs[list(for_std_devs.keys())[0]])
             for i in range(length):
                 vals = []

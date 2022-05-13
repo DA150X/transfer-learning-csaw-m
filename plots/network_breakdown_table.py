@@ -37,7 +37,7 @@ def create_chart_for_metric(metric, args):
 
     for network in networks:
         with open(output_filename, 'a') as out:
-            out.write(f'\\begin{{table}}[h!]\n')
+            out.write(f'\\begin{{table}}[H]\n')
             out.write(f'\\begin{{center}}\n')
             out.write(f'\\caption{{AUC Performance table for \\textbf{{\\textit{{{network}}}}}.}}\n')
             out.write(f'\\label{{tab:auc_performance_for{network}}}\n')
@@ -52,9 +52,9 @@ def create_chart_for_metric(metric, args):
             for_avg_row[sample_size] = []
 
         for label in labels:
-            safe_label = label.replace('_', '\_')
+            safe_label = label.replace('_', ' ')
             with open(output_filename, 'a') as out:
-                out.write(f'{safe_label} ')
+                out.write(f'\\tt{{{safe_label}}} ')
 
             for sample_size in sample_sizes:
                 vals = []
@@ -95,7 +95,7 @@ def create_chart_for_metric(metric, args):
             out.write('\\\\\n')
 
         with open(output_filename, 'a') as out:
-            out.write(f'Std. dev.')
+            out.write(f'Standard deviation')
             for sample_size, values in for_avg_row.items():
                 out.write(f'& {round(np.std(values), 2)}')
 
