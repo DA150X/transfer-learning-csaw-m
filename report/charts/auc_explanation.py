@@ -21,11 +21,11 @@ def main():
 
     pylab.rcParams.update({
         'legend.title_fontsize': 'xx-large',
-        'legend.fontsize': 'x-large',
-        'axes.labelsize': 'x-large',
+        'legend.fontsize': 'xx-large',
+        'axes.labelsize': 'xx-large',
         'axes.titlesize': 'xx-large',
-        'xtick.labelsize': 'large',
-        'ytick.labelsize': 'large',
+        'xtick.labelsize': 'xx-large',
+        'ytick.labelsize': 'xx-large',
         'font.size': 18,
     })
 
@@ -84,6 +84,14 @@ def main():
         transform=ax.transAxes,
         fontsize=50,
     )
+
+    plt.setp(ax.spines.values(), linewidth=4)
+    ax.spines['bottom'].set_color('#000')
+    ax.spines['top'].set_color('#000')
+    ax.spines['right'].set_color('#000')
+    ax.spines['left'].set_color('#000')
+    ax.xaxis.set_tick_params(width=0)
+    ax.yaxis.set_tick_params(width=0)
 
     filename = f'auc.png'
     ensure_outputdir_and_write_chart(args.path_to_output + '/auc_explanation', plt, filename, dpi=300)
