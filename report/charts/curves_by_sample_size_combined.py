@@ -61,7 +61,6 @@ def create_chart_for_metric(metric, args):
     for label in labels:
         plt.figure(figsize=(20, 10))
         fig, axs = plt.subplots(2, 1, figsize=(15, 15))
-        plt.suptitle(make_title(metric, label))
 
         for validation in [True, False]:
             if not validation:
@@ -72,7 +71,7 @@ def create_chart_for_metric(metric, args):
             ax.set_ylabel(make_y_axis_label(metric, label))
             ax.set_xlabel('Epoch')
             ax.xaxis.set_major_formatter(ticker.FormatStrFormatter('%i'))
-            ax.set_title(make_subtitle(metric, validation))
+            ax.set_title('(a)' if not validation else '(b)', y=-0.35)
 
             for sample_size in sample_sizes:
                 values, epochs = get_results_for_sample_size_and_label(args.path_to_csv, sample_size, label, metric, validation=validation)
@@ -111,44 +110,6 @@ def make_y_axis_label(metric, label):
     elif metric == 'loss':
         metric = 'Loss'
     return r' ${{{metric}}}$'.format(metric=metric)
-
-
-def make_subtitle(metric, validation):
-    if validation:
-        name = 'Validation '
-    else:
-        name = 'Training '
-
-    if metric == 'acc':
-        metric = 'Accuracy'
-    elif metric == 'f1':
-        metric = 'F_1'
-    elif metric == 'auc':
-        metric = 'AUC'
-    elif metric == 'loss':
-        metric = 'Loss'
-
-    return r'$\it{{{name}}}$ $\it{{{metric}}}$'.format(name=name, metric=metric)
-
-
-def make_title(metric, label):
-    string = ''
-
-    if metric == 'acc':
-        metric = 'Accuracy'
-    elif metric == 'f1':
-        metric = 'F_1'
-    elif metric == 'auc':
-        metric = 'AUC'
-    elif metric == 'loss':
-        metric = 'Loss'
-
-    string += r' $\bf{{{metric}}}$ for the '.format(metric=metric)
-    for piece in label.split('_'):
-        string += r'$\bf{{{label}}}$'.format(label=piece)
-        string += ' '
-    string += 'label'
-    return string
 
 
 def make_legend(args):
