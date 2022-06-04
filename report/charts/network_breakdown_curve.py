@@ -49,7 +49,6 @@ def main():
     plt.figure(figsize=(14, 10))
     fig, ax = plt.subplots(figsize=(14, 10))
 
-    plt.title(make_title(metric))
     plt.ylabel(make_y_axis_label(metric))
     plt.xlabel('Sample size')
     plt.xticks([100, 3000, 5000, 7000, 9523], ['100', '3000', '5000', '7000', '9523'])
@@ -81,7 +80,9 @@ def main():
             y,
             label=network,
             color=colors[network],
-            linewidth=3
+            linewidth=3,
+            marker='o',
+            markersize=18,
         )
 
     # calculate the trendline
@@ -98,7 +99,7 @@ def main():
     )
 
     plt.legend(loc='lower right', title='Legend')
-    plt.ylim([min(plt.ylim()) - 0.25 * max(plt.ylim()), max(plt.ylim()) + 0.25 * max(plt.ylim())])
+    plt.ylim([min(plt.ylim()) - 0.05 * max(plt.ylim()), max(plt.ylim()) + 0.05 * max(plt.ylim())])
     plt.tight_layout()
 
     filename = f'all_{metric}'
@@ -113,19 +114,6 @@ def make_y_axis_label(metric):
     elif metric == 'auc':
         metric = 'AUC'
     return r' ${{{metric}}}$'.format(metric=metric)
-
-
-def make_title(metric):
-    string = ''
-    if metric == 'acc':
-        metric = 'accuracy'
-    elif metric == 'f1':
-        metric = 'F_1'
-    elif metric == 'auc':
-        metric = 'AUC'
-
-    string += r'Average $\bf{{{metric}}}$ for each network accross all cancer labels'.format(metric=metric)
-    return string
 
 
 if __name__ == '__main__':
