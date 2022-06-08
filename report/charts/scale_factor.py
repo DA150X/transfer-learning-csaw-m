@@ -13,19 +13,22 @@ from common import (
     get_sample_sizes,
     get_labels,
     get_networks,
-    get_test_results_for_label_network_and_sample_size,
+    get_test_results_for_label_network_scale_factor_and_sample_size,
+    get_scale_factors,
 )
 
 
 def main():
-    parser = get_argument_parser('network_breakdown_curve')
+    parser = get_argument_parser('scale_factor')
     args = parser.parse_args(sys.argv[1:])
 
     metric = 'auc'
+    label = 'If_cancer'
 
     sample_sizes = get_sample_sizes(args.path_to_csv, metric)
     labels = get_labels(args.path_to_csv, metric)
     networks = get_networks(args.path_to_csv, metric)
+    scale_factors = get_scale_factors(args.path_to_csv, metric)
 
     pylab.rcParams.update({
         'legend.title_fontsize': 'xx-large',
@@ -38,72 +41,68 @@ def main():
         'font.family': 'Georgia',
     })
 
+    # https://learnui.design/tools/data-color-picker.html#divergent
     colors = {
-        'DenseNet169': '#003f5c',
-        'EfficientNetV2B0': '#bc5090',
-        'ResNet50V2': '#ffa600',
+        '9523': '#00876c',
+        '7000': '#63b179',
+        '5000': '#aed987',
+        '3000': '#C5C98E',  # custom
+        '1000': '#fcc267',
+        '500': '#ef8250',
+        '100': '#d43d51',
+        'fine-tune': '#444',
     }
 
-    xvals = [100, 500, 1000, 3000, 5000, 7000, 9523]
+    xvals = [1, 2, 3]
 
     plt.figure(figsize=(14, 10))
     fig, ax = plt.subplots(figsize=(14, 10))
 
     plt.ylabel(make_y_axis_label(metric))
-    plt.xlabel('Sample size')
-    plt.xticks([100, 3000, 5000, 7000, 9523], ['100', '3000', '5000', '7000', '9523'])
+    plt.xlabel('Scale factor')
+    plt.xticks([1, 2, 3], ['1x', '2x', '3x'])
 
-    x_all = []
-    y_all = []
-
-    for network in networks:
-        inc = 0
-        x = []
+    for sample_size in sample_sizes:
         y = []
-        for sample_size in sample_sizes:
-            avg = []
-            for label in labels:
-                values = get_test_results_for_label_network_and_sample_size(args.path_to_csv, metric, label, network, sample_size)
-                for scale_factor, value in values.items():
-                    avg.append(value)
+        x = []
+        inc = 0
+        for scale_factor in scale_factors:
+            for network in networks:
+                vals = []
+                values = get_test_results_for_label_network_scale_factor_and_sample_size(
+                    args.path_to_csv,
+                    metric,
+                    label,
+                    network,
+                    scale_factor,
+                    sample_size
+                )
+                after = values['after']
+                if after is not None:
+                    vals.append(after)
 
-            avg = sum(avg) / len(avg)
-
+            avg = sum(vals) / len(vals)
             x.append(xvals[inc])
             y.append(avg)
-            x_all.append(xvals[inc])
-            y_all.append(float(avg))
             inc += 1
 
         plt.plot(
             x,
             y,
-            label=network,
-            color=colors[network],
+            label=sample_size,
+            color=colors[sample_size],
             linewidth=3,
             marker='o',
             markersize=18,
         )
 
-    # calculate the trendline
-    z = np.polyfit(x_all, y_all, 1)
-    p = np.poly1d(z)
-    plt.plot(
-        x_all,
-        p(x_all),
-        linestyle='dotted',
-        linewidth=3,
-        color='#444444',
-        alpha=0.7,
-        label='Trendline'
-    )
-
-    plt.legend(loc='lower right', title='Legend')
+    plt.legend(loc='lower right', title='Sample size')
     plt.ylim([min(plt.ylim()) - 0.05 * max(plt.ylim()), max(plt.ylim()) + 0.05 * max(plt.ylim())])
+    plt.xlim(0.9, 3.8)
     plt.tight_layout()
 
-    filename = f'all_{metric}'
-    ensure_outputdir_and_write_chart(args.path_to_output + '/network_breakdown_curve', plt, filename, dpi=300)
+    filename = f'if_cancer_{metric}'
+    ensure_outputdir_and_write_chart(args.path_to_output + '/scale_factor', plt, filename, dpi=300)
 
 
 def make_y_axis_label(metric):
